@@ -1,4 +1,27 @@
 <RCC>
+    <qresource prefix="/awakening">
+        <file alias="audio.svg">pixmaps/awakening/audio.svg</file>
+        <file alias="close.svg">pixmaps/awakening/close.svg</file>
+        <file alias="divider.svg">pixmaps/awakening/divider.svg</file>
+        <file alias="folder.svg">pixmaps/awakening/folder.svg</file>
+        <file alias="fullscreen.svg">pixmaps/awakening/fullscreen.svg</file>
+        <file alias="Inter.ttf">pixmaps/awakening/Inter.ttf</file>
+        <file alias="logo.svg">pixmaps/awakening/logo.svg</file>
+        <file alias="maximize.svg">pixmaps/awakening/maximize.svg</file>
+        <file alias="minimize.svg">pixmaps/awakening/minimize.svg</file>
+        <file alias="more.svg">pixmaps/awakening/more.svg</file>
+        <file alias="next.svg">pixmaps/awakening/next.svg</file>
+        <file alias="pause.svg">pixmaps/awakening/pause.svg</file>
+        <file alias="play.svg">pixmaps/awakening/play.svg</file>
+        <file alias="previous.svg">pixmaps/awakening/previous.svg</file>
+        <file alias="queue.svg">pixmaps/awakening/queue.svg</file>
+        <file alias="settings.svg">pixmaps/awakening/settings.svg</file>
+        <file alias="sidebar.svg">pixmaps/awakening/sidebar.svg</file>
+        <file alias="subtitles.svg">pixmaps/awakening/subtitles.svg</file>
+        <file alias="volume-base.svg">pixmaps/awakening/volume-base.svg</file>
+        <file alias="volume-fill.svg">pixmaps/awakening/volume-fill.svg</file>
+        <file alias="volume.svg">pixmaps/awakening/volume.svg</file>
+    </qresource>
     <qresource prefix="/logo">
         <file alias="vlc256.png">../../../share/icons/256x256/vlc.png</file>
         <file alias="vlc128.png">../../../share/icons/128x128/vlc.png</file>

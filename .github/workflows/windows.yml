@@ -1,0 +1,31 @@
+name: Windows build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Get source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 150
+      - name: Build Windows x64
+        run: bash scripts/build-windows.sh
+        env:
+          JOBS: '4'
+      - name: Save portable build
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vlc-awakening-windows-x64
+          path: dist/vlc-awakening/
+          if-no-files-found: error
+          retention-days: 14

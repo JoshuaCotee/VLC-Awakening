@@ -790,6 +790,28 @@ ui_%.h: %.ui
 # Resources
 
 libqt_plugin_la_RES = \
+	pixmaps/awakening/audio.svg \
+	pixmaps/awakening/close.svg \
+	pixmaps/awakening/divider.svg \
+	pixmaps/awakening/folder.svg \
+	pixmaps/awakening/fullscreen.svg \
+	pixmaps/awakening/Inter.ttf \
+	pixmaps/awakening/logo.svg \
+	pixmaps/awakening/maximize.svg \
+	pixmaps/awakening/minimize.svg \
+	pixmaps/awakening/more.svg \
+	pixmaps/awakening/next.svg \
+	pixmaps/awakening/OFL.txt \
+	pixmaps/awakening/pause.svg \
+	pixmaps/awakening/play.svg \
+	pixmaps/awakening/previous.svg \
+	pixmaps/awakening/queue.svg \
+	pixmaps/awakening/settings.svg \
+	pixmaps/awakening/sidebar.svg \
+	pixmaps/awakening/subtitles.svg \
+	pixmaps/awakening/volume-base.svg \
+	pixmaps/awakening/volume-fill.svg \
+	pixmaps/awakening/volume.svg \
 	pixmaps/VLCIcons.ttf \
 	pixmaps/addons/addon_default.svg \
 	pixmaps/addons/addon_broken.svg \
@@ -1167,6 +1189,9 @@ libqml_module_player_a_ModulePath = VLC/Player
 libqml_module_player_a_CXXFLAGS = $(libqt_plugin_la_CXXFLAGS)
 libqml_module_player_a_CPPFLAGS = $(libqt_plugin_la_CPPFLAGS)
 libqml_module_player_a_QML = \
+	player/qml/AwakeningButton.qml \
+	player/qml/AwakeningControlBar.qml \
+	player/qml/AwakeningTopBar.qml \
 	player/qml/ControlBar.qml \
 	player/qml/PlaybackSpeed.qml \
 	player/qml/LyricsFlickable.qml \

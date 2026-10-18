@@ -1,4 +1,16 @@
-# VLC media player
+# VLC Awakening
+
+A Windows-first fork of VLC, following [Juxtopposed's VLC Redesign](https://www.figma.com/community/file/1691465999134370980/vlc-redesign). Built in VLC's native Qt/QML interface with the existing playback engine.
+
+The first player implementation is in development. The compact title bar and playback controls are connected to VLC. Build and playback verification are underway. No binary release is available yet.
+
+- [Build instructions and project notes](doc/AWAKENING.md)
+- [Windows build workflow](https://github.com/JoshuaCotee/VLC-Awakening/actions/workflows/windows.yml)
+- [Design attribution and implementation scope](doc/AWAKENING.md#design-reference)
+
+This is an independent fork. It is not affiliated with or endorsed by VideoLAN or Juxtopposed.
+
+## Upstream VLC
 
 **VLC** is a libre and open source **media player** and **multimedia engine**,
 focused on **playing everything**, and **running everywhere**.

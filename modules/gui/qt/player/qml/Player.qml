@@ -33,6 +33,12 @@ import VLC.Util
 FocusScope {
     id: rootPlayer
 
+    Rectangle {
+        anchors.fill: parent
+        color: "#1b1b1b"
+        z: -1
+    }
+
     // Properties
 
     //behave like a Page
@@ -183,6 +189,8 @@ FocusScope {
         anchors {
             left: parent.left
             right: parent.right
+            leftMargin: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
+            rightMargin: leftMargin
             top: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? topBar.bottom : parent.top
             bottom: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? controlBar.top : parent.bottom
         }
@@ -929,7 +937,7 @@ FocusScope {
         }
     }
 
-    TopBar {
+    AwakeningTopBar {
         id: topBar
 
         anchors.top: parent.top
@@ -1279,7 +1287,7 @@ FocusScope {
         }
     }
 
-    ControlBar {
+    AwakeningControlBar {
         id: controlBar
 
         anchors {
@@ -1291,23 +1299,6 @@ FocusScope {
         hoverEnabled: true
 
         focus: true
-
-        rightPadding: VLCStyle.applicationHorizontalMargin
-        leftPadding: VLCStyle.applicationHorizontalMargin
-        bottomPadding: VLCStyle.applicationVerticalMargin + VLCStyle.margin_xsmall
-
-        textPosition: (MainCtx.pinVideoControls)
-                      ? ControlBar.TimeTextPosition.LeftRightSlider
-                      : ControlBar.TimeTextPosition.AboveSlider
-
-        // hide right text so that it won't overlap with play queue
-        showRemainingTime: (textPosition !== ControlBar.TimeTextPosition.AboveSlider)
-                           || !playlistVisibility.isPlaylistVisible
-
-        onStateChanged: {
-            if (state === "visible")
-                showChapterMarks()
-        }
 
         Navigation.parentItem: rootPlayer
         Navigation.upItem: {
@@ -1328,30 +1319,8 @@ FocusScope {
 
         onRequestLockUnlockAutoHide: (lock) => rootPlayer.lockUnlockAutoHide(lock)
 
-        identifier: (Player.hasVideoOutput) ? PlayerControlbarModel.Videoplayer
-                                            : PlayerControlbarModel.Audioplayer
-
+        onTogglePlaylistVisibility: playlistVisibility.togglePlaylistVisibility()
         onHoveredChanged: rootPlayer.lockUnlockAutoHide(hovered)
-
-        background: Rectangle {
-            id: controlBarBackground
-
-            visible: !MainCtx.hasEmbededVideo || MainCtx.pinVideoControls || !rootPlayer.displayFadeRectangles
-
-            opacity: {
-                if (MainCtx.hasEmbededVideo && !MainCtx.pinVideoControls && !rootPlayer.displayFadeRectangles) {
-                    return 0.6
-                } else if ((Window.visibility === Window.FullScreen) && MainCtx.hasEmbededVideo) {
-                    return MainCtx.pinOpacity
-                } else if (AcrylicController.enabled || !MainCtx.hasEmbededVideo) {
-                    return 0.7
-                } else {
-                    return 1.0
-                }
-            }
-
-            color: windowTheme.bg.primary
-        }
 
         FadeControllerStateGroup {
             target: controlBar

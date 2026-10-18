@@ -427,7 +427,7 @@ vlc_module_begin ()
     add_bool( "qt-embedded-open", false, QT_NATIVEOPEN_TEXT,
                nullptr )
 
-    add_bool( "qt-pin-controls", false, QT_PIN_CONTROLS_TEXT, QT_PIN_CONTROLS_LONGTEXT )
+    add_bool( "qt-pin-controls", true, QT_PIN_CONTROLS_TEXT, QT_PIN_CONTROLS_LONGTEXT )
 
 
     add_obsolete_bool( "qt-advanced-pref" ) /* since 4.0.0 */
@@ -1273,7 +1273,7 @@ static void *Thread( void *obj )
     }
 #endif
 
-    app.setApplicationDisplayName( qtr("VLC media player") );
+    app.setApplicationDisplayName( qtr("VLC Awakening") );
     app.setApplicationVersion( QString::fromUtf8(VERSION_MESSAGE) );
 
     if( QDate::currentDate().dayOfYear() >= QT_XMAS_JOKE_DAY && var_InheritBool( p_intf, "qt-icon-change" ) )

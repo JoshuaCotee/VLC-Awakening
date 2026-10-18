@@ -63,3 +63,6 @@ static-lib/
 !buildsystem/
 !build.rs
 !extras/package/apple/build.sh
+# Local Windows builds and design reference material
+/.local/
+/dist/
