@@ -20,6 +20,7 @@ make -C win64 package-win-strip
 
 cp -a /work/install/. /output/vlc-awakening/
 mkdir -p /output/vlc-awakening/portable
+printf 'Settings for this portable copy are stored in this folder.\n' > /output/vlc-awakening/portable/README.txt
 mkdir -p /output/vlc-awakening/licenses
 cp modules/gui/qt/pixmaps/awakening/OFL.txt /output/vlc-awakening/licenses/Inter-OFL.txt
 cp doc/AWAKENING.md /output/vlc-awakening/PROJECT.md

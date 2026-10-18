@@ -35,7 +35,9 @@ FocusScope {
 
     Rectangle {
         anchors.fill: parent
-        color: "#1b1b1b"
+        color: MainCtx.hasEmbededVideo ? "transparent" : "#1b1b1b"
+        border.color: "#1b1b1b"
+        border.width: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
         z: -1
     }
 
@@ -511,7 +513,7 @@ FocusScope {
                         onVlcWheelKey: (key) => MainCtx.sendVLCHotkey(key)
                     }
 
-                    // â”€â”€ Two-panel lyrics layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    // Two-panel lyrics layout
                     Item {
                         id: leftSideParent
 
