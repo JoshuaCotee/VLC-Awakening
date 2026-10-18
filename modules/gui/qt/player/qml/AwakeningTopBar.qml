@@ -51,21 +51,25 @@ FocusScope {
         anchors.left: parent.left
         anchors.leftMargin: 6 * root.uiScale + root.sideMargin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 7 * root.uiScale
+        spacing: 0
         AwakeningButton {
             artwork: "logo"
             Layout.preferredWidth: 38 * root.uiScale
+            Layout.rightMargin: 7 * root.uiScale
             description: qsTr("About VLC Awakening")
             onClicked: contextMenu.popup(mapToGlobal(0, height))
         }
         AwakeningButton {
             artwork: "more"
+            Layout.preferredWidth: 28 * root.uiScale
+            Layout.rightMargin: 10 * root.uiScale
             artworkSize: 18
             description: qsTr("Menu")
             onClicked: contextMenu.popup(mapToGlobal(0, height))
         }
         AwakeningButton {
             artwork: "sidebar"
+            Layout.preferredWidth: 28 * root.uiScale
             description: qsTr("Toggle play queue")
             checked: root.playlistVisible
             onClicked: root.togglePlaylistVisibility()
@@ -78,11 +82,13 @@ FocusScope {
         }
         AwakeningButton {
             artwork: "folder"
+            Layout.preferredWidth: 28 * root.uiScale
             description: qsTr("Media library")
             visible: root.width > 650 * root.uiScale
             onClicked: root.backRequested()
         }
         T.Label {
+            Layout.leftMargin: 4 * root.uiScale
             visible: root.width > 750 * root.uiScale
             text: qsTr("Videos")
             color: "#8f8f8f"

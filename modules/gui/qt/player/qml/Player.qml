@@ -130,10 +130,7 @@ FocusScope {
     ColorContext {
         id: windowTheme
 
-        // NOTE: We force the night theme when playing a video.
-        palette: (MainCtx.hasEmbededVideo && MainCtx.pinVideoControls === false)
-                 ? VLCStyle.darkPalette
-                 : VLCStyle.palette
+        palette: VLCStyle.darkPalette
 
         colorSet: ColorContext.Window
     }
@@ -307,6 +304,30 @@ FocusScope {
 
                     TouchDragHandler {
 
+                    }
+                }
+
+                Repeater {
+                    model: rootPlayer._controlsUnderVideo ? 4 : 0
+                    Canvas {
+                        required property int index
+                        width: 10 * VLCStyle.scale
+                        height: width
+                        x: (index === 0 || index === 3) ? 0 : parent.width - width
+                        y: index < 2 ? 0 : parent.height - height
+                        rotation: index * 90
+                        onWidthChanged: requestPaint()
+                        onPaint: {
+                            const context = getContext("2d")
+                            context.clearRect(0, 0, width, height)
+                            context.fillStyle = "#1b1b1b"
+                            context.beginPath()
+                            context.moveTo(0, 0)
+                            context.lineTo(width, 0)
+                            context.arc(width, height, width, -Math.PI / 2, -Math.PI, true)
+                            context.closePath()
+                            context.fill()
+                        }
                     }
                 }
 
@@ -490,7 +511,7 @@ FocusScope {
                         onVlcWheelKey: (key) => MainCtx.sendVLCHotkey(key)
                     }
 
-                    // ── Two-panel lyrics layout ────────────────────────
+                    // â”€â”€ Two-panel lyrics layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                     Item {
                         id: leftSideParent
 

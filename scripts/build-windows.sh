@@ -17,6 +17,6 @@ docker run --rm --user root --name vlc-awakening-builder \
     --mount "type=volume,source=$VOLUME,target=/work" \
     --mount "type=bind,source=$ROOT,target=/source,readonly" \
     --mount "type=bind,source=$ROOT/dist,target=/output" \
-    -e "JOBS=$JOBS" -e "VLC_REVISION=$REVISION" \
+    -e "JOBS=$JOBS" -e "VLC_REVISION=$REVISION" -e "FULL_BUILD=${FULL_BUILD:-0}" \
     -e "VLC_PREBUILT_CONTRIBS_URL=$CONTRIB_URL" \
     "$IMAGE" bash /source/scripts/build-in-container.sh

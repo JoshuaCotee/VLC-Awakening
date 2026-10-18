@@ -11,6 +11,7 @@ T.Button {
     property string description
     property bool accent: false
     property real artworkSize: 24
+    property bool mirroredArtwork: ["sidebar", "folder", "volume"].indexOf(artwork) !== -1
     readonly property real uiScale: VLCStyle.scale
 
     implicitWidth: 30 * uiScale
@@ -37,6 +38,7 @@ T.Button {
             source: "qrc:/awakening/" + control.artwork + ".svg"
             sourceSize: Qt.size(width * Screen.devicePixelRatio, height * Screen.devicePixelRatio)
             fillMode: Image.PreserveAspectFit
+            mirror: control.mirroredArtwork
             opacity: control.enabled ? 1 : 0.35
         }
     }

@@ -154,6 +154,7 @@ T.Pane {
             spacing: 8 * root.uiScale
             AwakeningButton {
                 artwork: "volume"
+                Layout.preferredWidth: 24 * root.uiScale
                 description: Player.muted ? qsTr("Unmute (M)") : qsTr("Mute (M)")
                 checked: Player.muted
                 onClicked: Player.muted = !Player.muted
@@ -170,7 +171,10 @@ T.Pane {
                 focusPolicy: Qt.StrongFocus
                 Accessible.name: qsTr("Volume")
                 AccessibleCompat.id: "awakeningVolumeSlider"
-                onMoved: Player.volume = value
+                onMoved: {
+                    Player.muted = false
+                    Player.volume = value
+                }
                 Binding { target: volume; property: "value"; value: Player.volume; when: !volume.pressed }
                 background: Item {
                     Image {
