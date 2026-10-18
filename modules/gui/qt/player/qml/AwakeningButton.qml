@@ -3,7 +3,6 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Templates as T
 import VLC.Style
-import VLC.Widgets as Widgets
 
 T.Button {
     id: control
@@ -43,9 +42,7 @@ T.Button {
         }
     }
 
-    Widgets.ToolTipExt {
-        visible: control.hovered || control.visualFocus
-        text: control.description
-        delay: VLCStyle.delayToolTipAppear
-    }
+    T.ToolTip.visible: control.hovered || control.visualFocus
+    T.ToolTip.text: control.description
+    T.ToolTip.delay: VLCStyle.delayToolTipAppear
 }

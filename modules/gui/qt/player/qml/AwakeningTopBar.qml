@@ -56,7 +56,7 @@ FocusScope {
             artwork: "logo"
             Layout.preferredWidth: 38 * root.uiScale
             Layout.rightMargin: 7 * root.uiScale
-            description: qsTr("About VLC Awakening")
+            description: qsTr("VLC menu")
             onClicked: contextMenu.popup(mapToGlobal(0, height))
         }
         AwakeningButton {

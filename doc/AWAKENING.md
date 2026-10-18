@@ -24,6 +24,8 @@ This milestone makes no performance claims and does not rewrite the playback eng
 
 The build uses VideoLAN's Windows cross-compilation image and matching prebuilt dependencies. The compiler runs inside a Linux Docker container and produces a Windows x64 executable.
 
+The compiler image and dependency revision are pinned in `scripts/build-windows.sh`. Legacy skins and the upstream automatic updater are disabled for this fork. The portable package includes the compiler runtime libraries required by its plugins.
+
 On Windows, with Ubuntu 24.04 in WSL and Docker available inside Ubuntu:
 
 ```powershell

@@ -189,7 +189,7 @@ FocusScope {
             left: parent.left
             right: parent.right
             leftMargin: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
-            rightMargin: leftMargin
+            rightMargin: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
             top: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? topBar.bottom : parent.top
             bottom: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? controlBar.top : parent.bottom
         }

@@ -8,7 +8,6 @@ import VLC.Playlist
 import VLC.Dialogs
 import VLC.Style
 import VLC.Util
-import VLC.Widgets as Widgets
 
 T.Pane {
     id: root
@@ -133,11 +132,9 @@ T.Pane {
                     visible: seek.enabled
                 }
                 HoverHandler { id: seekHover }
-                Widgets.ToolTipExt {
-                    visible: seekHover.hovered && seek.enabled
-                    text: Player.length.scale(Math.max(0, Math.min(1, seekHover.point.position.x / seek.width))).formatHMS()
-                    delay: 200
-                }
+                T.ToolTip.visible: seekHover.hovered && seek.enabled
+                T.ToolTip.text: Player.length.scale(Math.max(0, Math.min(1, seekHover.point.position.x / seek.width))).formatHMS(0)
+                T.ToolTip.delay: 200
             }
             T.Label {
                 Layout.preferredWidth: 76 * root.uiScale
@@ -209,11 +206,9 @@ T.Pane {
                 }
                 handle: Item {}
                 HoverHandler { id: volumeHover }
-                Widgets.ToolTipExt {
-                    visible: volumeHover.hovered || volume.pressed || volume.visualFocus
-                    text: qsTr("Volume %1%").arg(Math.round(Player.volume * 100))
-                    delay: 200
-                }
+                T.ToolTip.visible: volumeHover.hovered || volume.pressed || volume.visualFocus
+                T.ToolTip.text: qsTr("Volume %1%").arg(Math.round(Player.volume * 100))
+                T.ToolTip.delay: 200
             }
         }
 
@@ -247,6 +242,8 @@ T.Pane {
     TracksMenu {
         id: tracks
         parent: root
+        width: Math.min(760 * root.uiScale, root.width - 20 * root.uiScale)
+        colorContext.palette: VLCStyle.darkPalette
         x: Math.max(0, root.width - width - 20 * root.uiScale)
         y: -height - 8 * root.uiScale
         onOpened: root.requestLockUnlockAutoHide(true)

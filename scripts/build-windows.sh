@@ -7,7 +7,7 @@ VOLUME="vlc-awakening-build"
 JOBS="${JOBS:-4}"
 
 git_source() { git -c safe.directory="$ROOT" -C "$ROOT" "$@"; }
-CONTRIB_SHA="$(git_source rev-list -1 HEAD -- extras/tools contrib extras/ci extras/package/win32)"
+CONTRIB_SHA="${VLC_CONTRIB_REVISION:-7ee44ffc93821fee267b5d35fa2b1719bb790880}"
 REVISION="$(git_source rev-parse --short=12 HEAD)-awakening"
 CONTRIB_URL="https://artifacts.videolan.org/vlc/win64/vlc-contrib-x86_64-w64-mingw32-${CONTRIB_SHA}.tar.zst"
 

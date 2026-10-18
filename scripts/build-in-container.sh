@@ -6,6 +6,15 @@ tar -C /source --exclude=./.git --exclude=./.local --exclude=./dist -cf - . |
     tar -C /work/vlc -xf -
 cd /work/vlc
 export PATH="/work/vlc/extras/tools/build/bin:$PATH"
+runtime_libraries=()
+for library in libgcc_s_seh-1.dll libstdc++-6.dll libwinpthread-1.dll; do
+    runtime="$(x86_64-w64-mingw32-g++ -print-file-name="$library")"
+    if [ ! -f "$runtime" ]; then
+        printf 'Missing compiler runtime: %s\n' "$library" >&2
+        exit 1
+    fi
+    runtime_libraries+=("$runtime")
+done
 if [ "$(cat src/revision.txt 2>/dev/null || true)" != "$VLC_REVISION" ]; then
     printf '%s\n' "$VLC_REVISION" > src/revision.txt
 fi
@@ -17,6 +26,11 @@ else
     make -C win64 -j"$JOBS"
 fi
 make -C win64 package-win-strip
+
+for runtime in "${runtime_libraries[@]}"; do
+    cp "$runtime" /work/install/
+    x86_64-w64-mingw32-strip "/work/install/$(basename "$runtime")"
+done
 
 cp -a /work/install/. /output/vlc-awakening/
 mkdir -p /output/vlc-awakening/portable
