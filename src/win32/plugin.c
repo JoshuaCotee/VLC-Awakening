@@ -61,7 +61,9 @@ void *vlc_dlopen(const char *psz_file, bool lazy)
     DWORD mode;
     if (SetThreadErrorMode (SEM_FAILCRITICALERRORS, &mode) != 0)
     {
-        handle = LoadLibraryExW(wfile, NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        /* Packaged compiler runtimes live beside the executable. */
+        handle = LoadLibraryExW(wfile, NULL, LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
+                                           LOAD_LIBRARY_SEARCH_SYSTEM32);
         SetThreadErrorMode (mode, NULL);
     }
 #elif WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)

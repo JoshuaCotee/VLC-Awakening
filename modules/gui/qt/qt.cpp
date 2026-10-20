@@ -381,7 +381,7 @@ vlc_module_begin ()
                           nullptr )
         change_volatile()
 
-    add_bool( "qt-video-autoresize", true, KEEPSIZE_TEXT,
+    add_bool( "qt-video-autoresize", false, KEEPSIZE_TEXT,
               KEEPSIZE_LONGTEXT )
     add_bool( "qt-name-in-title", true, TITLE_TEXT,
               TITLE_LONGTEXT )

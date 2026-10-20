@@ -20,6 +20,8 @@ The new title bar and controls connect to VLC's native playback and playlist con
 
 This milestone makes no performance claims and does not rewrite the playback engine.
 
+The fork currently follows VLC's 4.0 development branch. First launch opens maximized, with a larger restored window size. Videos fit inside the player without resizing the window by default. At narrow widths the controls move into two rows so the playback, audio, subtitle, settings, and queue buttons stay available.
+
 ## Build
 
 The build uses VideoLAN's Windows cross-compilation image and matching prebuilt dependencies. The compiler runs inside a Linux Docker container and produces a Windows x64 executable.
@@ -47,3 +49,5 @@ GitHub Actions provides the same build through the **Windows build** workflow. I
 ## Validation
 
 Before publishing a binary release, check opening local video, frame progression, pause/resume, seek, volume/mute, subtitles, fullscreen, keyboard shortcuts, resizing, and closing. Record the exact source commit and any remaining issues with the release.
+
+The Windows workflow also runs a native startup and playback check using a generated video fixture. It rejects QML startup errors, plugin load failures, missing video output, and failure to exit after playback. Run the same check locally with `./scripts/test-windows-build.ps1 -BuildPath ./dist/vlc-awakening`.

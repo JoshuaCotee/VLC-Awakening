@@ -311,24 +311,26 @@ FocusScope {
 
                 Repeater {
                     model: rootPlayer._controlsUnderVideo ? 4 : 0
-                    Canvas {
+                    Item {
                         required property int index
                         width: 10 * VLCStyle.scale
                         height: width
                         x: (index === 0 || index === 3) ? 0 : parent.width - width
                         y: index < 2 ? 0 : parent.height - height
                         rotation: index * 90
-                        onWidthChanged: requestPaint()
-                        onPaint: {
-                            const context = getContext("2d")
-                            context.clearRect(0, 0, width, height)
-                            context.fillStyle = "#1b1b1b"
-                            context.beginPath()
-                            context.moveTo(0, 0)
-                            context.lineTo(width, 0)
-                            context.arc(width, height, width, -Math.PI / 2, -Math.PI, true)
-                            context.closePath()
-                            context.fill()
+                        clip: true
+
+                        // Clip a native border to the outside of the rounded corner.
+                        Rectangle {
+                            x: -parent.width
+                            y: -parent.height
+                            width: parent.width * 4
+                            height: parent.height * 4
+                            radius: parent.width * 2
+                            color: "transparent"
+                            border.width: parent.width
+                            border.color: "#1b1b1b"
+                            antialiasing: true
                         }
                     }
                 }

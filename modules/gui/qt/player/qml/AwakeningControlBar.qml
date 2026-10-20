@@ -12,9 +12,9 @@ import VLC.Util
 T.Pane {
     id: root
     readonly property real uiScale: VLCStyle.scale
-    readonly property real sliderY: (height - 28 * uiScale) / 2
+    readonly property real sliderY: narrow ? topPadding : (height - 28 * uiScale) / 2
     readonly property bool compact: width < 850 * uiScale
-    readonly property bool narrow: width < 660 * uiScale
+    readonly property bool narrow: width < 900 * uiScale
     readonly property ColorContext colorContext: ColorContext {
         palette: VLCStyle.darkPalette
         colorSet: ColorContext.Window
@@ -24,7 +24,7 @@ T.Pane {
     signal forceUnlock()
     onForceUnlock: tracks.close()
 
-    implicitHeight: 54 * uiScale
+    implicitHeight: (narrow ? 94 : 54) * uiScale
     implicitWidth: 580 * uiScale
     leftPadding: (narrow ? 10 : 20) * uiScale
     rightPadding: leftPadding
@@ -38,15 +38,18 @@ T.Pane {
     FontLoader { id: inter; source: "qrc:/awakening/Inter.ttf" }
     background: Rectangle { color: "#1b1b1b" }
 
-    contentItem: RowLayout {
-        spacing: (root.compact ? 10 : 20) * root.uiScale
+    contentItem: GridLayout {
+        columns: root.narrow ? 4 : 5
+        rowSpacing: 8 * root.uiScale
+        columnSpacing: (root.compact ? 10 : 20) * root.uiScale
 
         RowLayout {
+            Layout.row: root.narrow ? 1 : 0
+            Layout.column: 0
             spacing: 8 * root.uiScale
             AwakeningButton {
                 artwork: "previous"
                 description: qsTr("Previous (P)")
-                visible: !root.narrow
                 enabled: !MainPlaylistController.empty
                 onClicked: MainPlaylistController.prevOrReset()
             }
@@ -69,18 +72,19 @@ T.Pane {
             AwakeningButton {
                 artwork: "next"
                 description: qsTr("Next (N)")
-                visible: !root.narrow
                 enabled: MainPlaylistController.hasNext
                 onClicked: MainPlaylistController.next()
             }
         }
 
         RowLayout {
+            Layout.row: 0
+            Layout.column: root.narrow ? 0 : 1
+            Layout.columnSpan: root.narrow ? 4 : 1
             Layout.fillWidth: true
             spacing: 8 * root.uiScale
             T.Label {
                 Layout.preferredWidth: 76 * root.uiScale
-                visible: !root.narrow
                 text: Player.time.valid() ? Player.time.formatHMS() : "00:00"
                 color: "#8f8f8f"
                 font.family: inter.name
@@ -138,7 +142,6 @@ T.Pane {
             }
             T.Label {
                 Layout.preferredWidth: 76 * root.uiScale
-                visible: !root.compact
                 text: Player.length.valid() ? Player.length.formatHMS() : "00:00"
                 color: "#8f8f8f"
                 font.family: inter.name
@@ -148,6 +151,8 @@ T.Pane {
         }
 
         RowLayout {
+            Layout.row: root.narrow ? 1 : 0
+            Layout.column: root.narrow ? 1 : 2
             spacing: 8 * root.uiScale
             AwakeningButton {
                 artwork: "volume"
@@ -158,7 +163,6 @@ T.Pane {
             }
             T.Slider {
                 id: volume
-                visible: !root.narrow
                 Layout.preferredWidth: 88 * root.uiScale
                 Layout.preferredHeight: 28 * root.uiScale
                 from: 0
@@ -213,11 +217,12 @@ T.Pane {
         }
 
         RowLayout {
+            Layout.row: root.narrow ? 1 : 0
+            Layout.column: root.narrow ? 2 : 3
             spacing: 12 * root.uiScale
             AwakeningButton {
                 artwork: "audio"
                 description: qsTr("Audio tracks")
-                visible: !root.narrow
                 onClicked: tracks.open()
             }
             AwakeningButton {
@@ -228,11 +233,12 @@ T.Pane {
             AwakeningButton {
                 artwork: "settings"
                 description: qsTr("Playback settings")
-                visible: !root.narrow
                 onClicked: DialogsProvider.extendedDialog()
             }
         }
         AwakeningButton {
+            Layout.row: root.narrow ? 1 : 0
+            Layout.column: root.narrow ? 3 : 4
             artwork: "queue"
             description: qsTr("Play queue")
             onClicked: root.togglePlaylistVisibility()

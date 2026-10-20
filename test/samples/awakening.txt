@@ -1,0 +1,6 @@
+awakening.mp4 is an eight-second, silent H.264 test clip generated for this project.
+It contains original moving graphics and a frame counter, without third-party footage.
+It is distributed under the same GPL-2.0-or-later license as the player interface.
+
+The Windows smoke test uses it to detect missing QML types, plugin load failures,
+missing video output, and failure to exit after playback.

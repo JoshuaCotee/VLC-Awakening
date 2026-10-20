@@ -69,7 +69,16 @@ InterfaceWindowHandler::InterfaceWindowHandler(qt_intf_t *_p_intf, MainCtx* main
     m_window->setIcon( QApplication::windowIcon() );
     m_window->setOpacity( var_InheritFloat( p_intf, "qt-opacity" ) );
 
-    QVLCTools::restoreWindowPosition( getSettings(), m_window, QSize(600, 420) );
+    QSize initialSize(1280, 800);
+    if (const auto screen = m_window->screen())
+    {
+        const auto available = screen->availableGeometry().size();
+        initialSize = initialSize.boundedTo(available * 0.9);
+    }
+    const bool hasSavedGeometry = getSettings()->contains("geometry");
+    QVLCTools::restoreWindowPosition( getSettings(), m_window, initialSize );
+    if (!hasSavedGeometry)
+        m_window->setWindowState(Qt::WindowMaximized);
 
     // this needs to be called asynchronously
     // otherwise QQuickWidget won't initialize properly
@@ -100,7 +109,7 @@ InterfaceWindowHandler::InterfaceWindowHandler(qt_intf_t *_p_intf, MainCtx* main
         }
 
         int margin = m_mainCtx->windowExtendedMargin() * 2;
-        int width = 320 + margin;
+        int width = 580 + margin;
         int height = 360 + margin;
 
         double intfScaleFactor = m_mainCtx->getIntfScaleFactor();

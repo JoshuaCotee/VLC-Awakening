@@ -29,3 +29,25 @@ jobs:
           path: dist/vlc-awakening/
           if-no-files-found: error
           retention-days: 14
+
+  smoke-test:
+    needs: build
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - name: Get source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Get portable build
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: vlc-awakening-windows-x64
+          path: dist/vlc-awakening
+      - name: Check native startup and playback
+        shell: pwsh
+        run: ./scripts/test-windows-build.ps1 -BuildPath ./dist/vlc-awakening
+      - name: Save playback log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-playback-log
+          path: dist/vlc-awakening/validation/
