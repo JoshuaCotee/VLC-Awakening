@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "maininterface/navigationmodel.hpp"
+#include "maininterface/awakening_preferences.hpp"
 
 #include "medialibrary/medialib.hpp"
 #include "medialibrary/mlqmltypes.hpp"
@@ -228,6 +229,8 @@ void MainUI::registerQMLTypes()
 
         // @uri VLC.MainInterface
         qmlRegisterSingletonInstance<MainCtx>(uri, versionMajor, versionMinor, "MainCtx", m_mainCtx);
+        qmlRegisterSingletonInstance<AwakeningPreferences>(uri, versionMajor, versionMinor,
+            "AwakeningPreferences", new AwakeningPreferences(m_intf, m_mainCtx));
 #ifdef _WIN32
         assert(dynamic_cast<MainCtxWin32*>(m_mainCtx));
         qmlRegisterAnonymousType<MainCtxWin32>(uri, versionMajor);

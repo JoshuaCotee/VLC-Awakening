@@ -183,6 +183,8 @@ libqt_plugin_la_SOURCES = \
 	maininterface/mainctx_submodels.cpp maininterface/mainctx_submodels.hpp \
 	maininterface/mainui.cpp \
 	maininterface/mainui.hpp \
+	maininterface/awakening_preferences.cpp \
+	maininterface/awakening_preferences.hpp \
 	maininterface/navigationmodel.cpp maininterface/navigationmodel.hpp \
 	maininterface/videosurface.cpp \
 	maininterface/videosurface.hpp \
@@ -451,6 +453,7 @@ nodist_libqt_plugin_la_SOURCES = \
 	maininterface/mainctx.moc.cpp \
 	maininterface/mainctx_submodels.moc.cpp \
 	maininterface/mainui.moc.cpp \
+	maininterface/awakening_preferences.moc.cpp \
 	maininterface/navigationmodel.moc.cpp \
 	maininterface/videosurface.moc.cpp \
 	maininterface/video_window_handler.moc.cpp \
@@ -790,6 +793,46 @@ ui_%.h: %.ui
 # Resources
 
 libqt_plugin_la_RES = \
+	pixmaps/awakening/design/audio-active.svg \
+	pixmaps/awakening/design/audio.svg \
+	pixmaps/awakening/design/chevron-down.svg \
+	pixmaps/awakening/design/chevron-right.svg \
+	pixmaps/awakening/design/close.svg \
+	pixmaps/awakening/design/controls-active.svg \
+	pixmaps/awakening/design/controls.svg \
+	pixmaps/awakening/design/extensions.svg \
+	pixmaps/awakening/design/general-active.svg \
+	pixmaps/awakening/design/general.svg \
+	pixmaps/awakening/design/info.svg \
+	pixmaps/awakening/design/interface-active.svg \
+	pixmaps/awakening/design/interface.svg \
+	pixmaps/awakening/design/library-active.svg \
+	pixmaps/awakening/design/library.svg \
+	pixmaps/awakening/design/menu-about.svg \
+	pixmaps/awakening/design/menu-capture.svg \
+	pixmaps/awakening/design/menu-convert.svg \
+	pixmaps/awakening/design/menu-customize.svg \
+	pixmaps/awakening/design/menu-disc.svg \
+	pixmaps/awakening/design/menu-file.svg \
+	pixmaps/awakening/design/menu-folder.svg \
+	pixmaps/awakening/design/menu-profile.svg \
+	pixmaps/awakening/design/menu-recent.svg \
+	pixmaps/awakening/design/menu-settings.svg \
+	pixmaps/awakening/design/menu-shortcuts.svg \
+	pixmaps/awakening/design/menu-stream.svg \
+	pixmaps/awakening/design/network.svg \
+	pixmaps/awakening/design/performance.svg \
+	pixmaps/awakening/design/playback-active.svg \
+	pixmaps/awakening/design/playback.svg \
+	pixmaps/awakening/design/privacy-active.svg \
+	pixmaps/awakening/design/privacy.svg \
+	pixmaps/awakening/design/recording-active.svg \
+	pixmaps/awakening/design/recording.svg \
+	pixmaps/awakening/design/search.svg \
+	pixmaps/awakening/design/subtitles-active.svg \
+	pixmaps/awakening/design/subtitles.svg \
+	pixmaps/awakening/design/video-active.svg \
+	pixmaps/awakening/design/video.svg \
 	pixmaps/awakening/audio.svg \
 	pixmaps/awakening/close.svg \
 	pixmaps/awakening/divider.svg \
@@ -1078,6 +1121,18 @@ libqml_module_maininterface_a_ModulePath = VLC/MainInterface
 libqml_module_maininterface_a_CXXFLAGS = $(libqt_plugin_la_CXXFLAGS)
 libqml_module_maininterface_a_CPPFLAGS = $(libqt_plugin_la_CPPFLAGS)
 libqml_module_maininterface_a_QML = \
+	maininterface/qml/AwakeningAction.qml \
+	maininterface/qml/AwakeningShortcuts.qml \
+	maininterface/qml/AwakeningNetwork.qml \
+	maininterface/qml/AwakeningMenu.qml \
+	maininterface/qml/AwakeningDialog.qml \
+	maininterface/qml/AwakeningField.qml \
+	maininterface/qml/AwakeningSelect.qml \
+	maininterface/qml/AwakeningSettingRow.qml \
+	maininterface/qml/AwakeningSettings.qml \
+	maininterface/qml/AwakeningSlider.qml \
+	maininterface/qml/AwakeningSwitch.qml \
+	maininterface/qml/AwakeningText.qml \
 	maininterface/qml/MenuTopbar.qml \
 	maininterface/qml/LocalTopbar.qml \
 	maininterface/qml/MainInterface.qml \
@@ -1092,7 +1147,10 @@ if UPDATE_CHECK
 libqml_module_maininterface_a_QML += maininterface/qml/UpdatePane.qml
 endif
 
-libqml_module_maininterface_a_Singleton_QML =
+libqml_module_maininterface_a_Singleton_QML = \
+	maininterface/qml/AwakeningTheme.qml \
+	maininterface/qml/AwakeningSettingsData.qml \
+	maininterface/qml/AwakeningUi.qml
 libqml_module_maininterface_a_SOURCES = $(QML_MODULE_maininterface_SRC)
 nodist_libqml_module_maininterface_a_SOURCES = maininterface/qmlassets.cpp $(QML_MODULE_maininterface_NODIST_EXTRA)
 QML_MODULE_LIBS += libqml_module_maininterface.a

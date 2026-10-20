@@ -57,7 +57,7 @@ FocusScope {
             Layout.preferredWidth: 38 * root.uiScale
             Layout.rightMargin: 7 * root.uiScale
             description: qsTr("VLC menu")
-            onClicked: contextMenu.popup(mapToGlobal(0, height))
+            onClicked: contextMenu.open()
         }
         AwakeningButton {
             artwork: "more"
@@ -65,7 +65,7 @@ FocusScope {
             Layout.rightMargin: 10 * root.uiScale
             artworkSize: 18
             description: qsTr("Menu")
-            onClicked: contextMenu.popup(mapToGlobal(0, height))
+            onClicked: contextMenu.open()
         }
         AwakeningButton {
             artwork: "sidebar"
@@ -115,6 +115,7 @@ FocusScope {
         anchors.rightMargin: 6 * root.uiScale + root.sideMargin
         anchors.verticalCenter: parent.verticalCenter
         visible: root.showCSD
+        enabled: visible
         Repeater {
             model: MainCtx.csdButtonModel.windowCSDButtons
             Row {
@@ -130,6 +131,8 @@ FocusScope {
                 AwakeningButton {
                     id: windowButton
                     width: 36 * root.uiScale
+                    externalHovered: buttonRow.modelData.showHovered
+                    externalPressed: buttonRow.modelData.externalPressed
                     artwork: buttonRow.modelData.type === CSDButton.Minimize ? "minimize"
                            : buttonRow.modelData.type === CSDButton.MaximizeRestore ? "maximize" : "close"
                     description: buttonRow.modelData.type === CSDButton.Minimize ? qsTr("Minimize")
@@ -139,21 +142,39 @@ FocusScope {
                         const point = mapToItem(null, 0, 0)
                         buttonRow.modelData.rect = Qt.rect(point.x, point.y, width, height)
                     }
-                    Component.onCompleted: Qt.callLater(updateRect)
+                    Component.onCompleted: {
+                        buttonRow.modelData.registerItem(windowButton)
+                        Qt.callLater(updateRect)
+                    }
                     onXChanged: Qt.callLater(updateRect)
+                    onYChanged: Qt.callLater(updateRect)
                     onWidthChanged: Qt.callLater(updateRect)
+                    onHeightChanged: Qt.callLater(updateRect)
+                    onVisibleChanged: Qt.callLater(updateRect)
                     Connections {
                         target: root
                         function onWidthChanged() { Qt.callLater(windowButton.updateRect) }
+                        function onHeightChanged() { Qt.callLater(windowButton.updateRect) }
+                        function onSideMarginChanged() { Qt.callLater(windowButton.updateRect) }
+                    }
+                    Connections {
+                        target: VLCStyle
+                        function onAppWidthChanged() { Qt.callLater(windowButton.updateRect) }
+                        function onAppHeightChanged() { Qt.callLater(windowButton.updateRect) }
+                    }
+                    Connections {
+                        target: MainCtx.intfMainWindow
+                        function onVisibilityChanged() { Qt.callLater(windowButton.updateRect) }
                     }
                 }
             }
         }
     }
 
-    Menus.QmlGlobalMenu {
+    AwakeningMenu {
         id: contextMenu
-        ctx: MainCtx
+        x: 6 * root.uiScale
+        y: root.height
         onAboutToShow: root.requestLockUnlockAutoHide(true)
         onAboutToHide: root.requestLockUnlockAutoHide(false)
     }

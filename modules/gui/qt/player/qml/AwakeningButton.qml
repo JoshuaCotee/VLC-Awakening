@@ -9,6 +9,8 @@ T.Button {
     property string artwork
     property string description
     property bool accent: false
+    property bool externalHovered: false
+    property bool externalPressed: false
     property real artworkSize: 24
     property bool mirroredArtwork: ["sidebar", "folder", "volume"].indexOf(artwork) !== -1
     readonly property real uiScale: VLCStyle.scale
@@ -23,8 +25,9 @@ T.Button {
 
     background: Rectangle {
         radius: 6 * control.uiScale
-        color: control.accent ? (control.down ? "#b56613" : "#d37918")
-                              : (control.down || control.checked ? "#373737" : control.hovered ? "#292929" : "transparent")
+        color: control.accent ? (control.down || control.externalPressed ? "#b56613" : "#d37918")
+                              : (control.down || control.externalPressed || control.checked ? "#373737"
+                                 : control.hovered || control.externalHovered ? "#292929" : "transparent")
         border.width: control.visualFocus ? 1 : 0
         border.color: "#d37918"
     }
@@ -42,7 +45,7 @@ T.Button {
         }
     }
 
-    T.ToolTip.visible: control.hovered || control.visualFocus
+    T.ToolTip.visible: control.hovered || control.externalHovered || control.visualFocus
     T.ToolTip.text: control.description
     T.ToolTip.delay: VLCStyle.delayToolTipAppear
 }

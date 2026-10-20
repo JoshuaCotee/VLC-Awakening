@@ -75,8 +75,12 @@ InterfaceWindowHandler::InterfaceWindowHandler(qt_intf_t *_p_intf, MainCtx* main
         const auto available = screen->availableGeometry().size();
         initialSize = initialSize.boundedTo(available * 0.9);
     }
-    const bool hasSavedGeometry = getSettings()->contains("geometry");
-    QVLCTools::restoreWindowPosition( getSettings(), m_window, initialSize );
+    const bool rememberGeometry = getSettings()->value("Awakening/rememberGeometry", true).toBool();
+    const bool hasSavedGeometry = rememberGeometry && getSettings()->contains("geometry");
+    if (rememberGeometry)
+        QVLCTools::restoreWindowPosition( getSettings(), m_window, initialSize );
+    else
+        m_window->resize(initialSize);
     if (!hasSavedGeometry)
         m_window->setWindowState(Qt::WindowMaximized);
 

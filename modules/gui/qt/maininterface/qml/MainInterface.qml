@@ -337,6 +337,16 @@ Item {
         }
 
         Loader {
+            anchors.fill: parent
+            active: ["settings", "shortcuts", "network"].includes(AwakeningUi.dialog)
+            source: "qrc:/qt/qml/VLC/MainInterface/" + ({
+                settings: "AwakeningSettings.qml",
+                shortcuts: "AwakeningShortcuts.qml",
+                network: "AwakeningNetwork.qml"
+            }[AwakeningUi.dialog] || "AwakeningSettings.qml")
+        }
+
+        Loader {
             active: {
                 const windowVisibility = MainCtx.intfMainWindow.visibility
                 return MainCtx.clientSideDecoration && !MainCtx.platformHandlesResizeWithCSD()

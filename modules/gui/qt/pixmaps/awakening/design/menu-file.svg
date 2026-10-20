@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame">
+<mask id="stroke0_0_110" fill="white">
+<path d="M3 8C3 4.68629 5.68629 2 9 2H17C19.2091 2 21 3.79086 21 6V18C21 20.2091 19.2091 22 17 22H7C4.79086 22 3 20.2091 3 18V8Z"/>
+</mask>
+<path id="Rectangle 1" d="M9 2H17C19.2091 2 21 3.79086 21 6V18C21 20.2091 19.2091 22 17 22H7C4.79086 22 3 20.2091 3 18V8C3 4.68629 5.68629 2 9 2Z" stroke-width="3" stroke-linejoin="round" stroke="#8F8F8F" mask="url(#stroke0_0_110)"/>
+<path id="Rectangle 2" d="M10 8V5.05263C10 4.47128 9.52872 4 8.94737 4C6.7673 4 5 5.7673 5 7.94737C5 8.52872 5.47128 9 6.05263 9H9C9.55228 9 10 8.55228 10 8Z" fill="#AB6314"/>
+</g>
+</svg>
