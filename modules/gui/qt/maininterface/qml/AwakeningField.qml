@@ -17,6 +17,7 @@ T.TextField {
     font.family: AwakeningTheme.fontFamily
     font.pixelSize: 14 * unit
     selectByMouse: true
+    verticalAlignment: TextInput.AlignVCenter
     opacity: enabled ? 1 : 0.4
     AwakeningText {
         x: control.leftPadding

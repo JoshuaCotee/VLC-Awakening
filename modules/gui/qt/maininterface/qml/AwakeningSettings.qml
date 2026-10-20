@@ -51,6 +51,15 @@ T.Popup {
         case "repeat": return AwakeningPreferences.value("repeat") ? "one" : AwakeningPreferences.value("loop") ? "all" : "off"
         case "finishAction": return AwakeningPreferences.value("play-and-exit") ? "quit" : "stop"
         case "rememberGeometry": return AwakeningPreferences.state("rememberGeometry", true)
+        case "notificationDuration": return AwakeningPreferences.state("notificationDuration", 3000)
+        case "playlistTree": return AwakeningPreferences.state("playlistTree", false)
+        case "lastfm": return AwakeningPreferences.interfaceEnabled("audioscrobbler")
+        case "httpRemote": return AwakeningPreferences.interfaceEnabled("http")
+        case "audioDevice": return AwakeningPreferences.currentAudioDevice()
+        case "startupVolume": return AwakeningPreferences.value("volume-save") ? -1
+            : Math.round(AwakeningPreferences.value("mmdevice-volume") * 100)
+        case "subtitleSizeMode": return AwakeningPreferences.value("freetype-fontsize") > 0 ? "pixels" : "relative"
+        case "rendererDiscovery": return AwakeningPreferences.state("rendererDiscovery", false)
         case "nightMode": return AwakeningPreferences.filterEnabled("audio-filter", "compressor")
         case "snapshotSize": return AwakeningPreferences.value("snapshot-width") + "x" + AwakeningPreferences.value("snapshot-height")
         case "buffering": {
@@ -67,6 +76,8 @@ T.Popup {
         case "finishAction": return [{text: qsTr("Stop"), value: "stop"}, {text: qsTr("Quit"), value: "quit"}]
         case "buffering": return [{text: qsTr("Low latency"), value: "low"}, {text: qsTr("Normal"), value: "normal"}, {text: qsTr("High latency"), value: "high"}, {text: qsTr("Custom"), value: "custom"}]
         case "snapshotSize": return [{text: qsTr("Same as video"), value: "-1x-1"}, {text: "1920 x 1080", value: "1920x1080"}, {text: "1280 x 720", value: "1280x720"}]
+        case "audioDevice": return AwakeningPreferences.audioDevices()
+        case "subtitleSizeMode": return [{text: qsTr("Relative to video"), value: "relative"}, {text: qsTr("Pixels"), value: "pixels"}]
         default: return []
         }
     }
@@ -77,8 +88,24 @@ T.Popup {
     }
     function writeSpecial(name, value) {
         switch (name) {
-        case "theme": case "accent": case "rememberGeometry":
+        case "theme": case "accent": case "rememberGeometry": case "notificationDuration": case "playlistTree":
             AwakeningPreferences.setState(name, value)
+            break
+        case "lastfm": AwakeningPreferences.setInterfaceEnabled("audioscrobbler", value); break
+        case "httpRemote": AwakeningPreferences.setInterfaceEnabled("http", value); break
+        case "audioDevice": AwakeningPreferences.selectAudioDevice(value); break
+        case "startupVolume":
+            AwakeningPreferences.setValue("volume-save", value < 0)
+            if (value >= 0) AwakeningPreferences.setValue("mmdevice-volume", value / 100)
+            break
+        case "subtitleSizeMode":
+            AwakeningPreferences.setValue("freetype-fontsize", value === "pixels" ? 24 : 0)
+            AwakeningPreferences.setValue("freetype-rel-fontsize", value === "pixels" ? 0 : 16)
+            break
+        case "rendererDiscovery":
+            AwakeningPreferences.setState(name, value)
+            if (value) Player.rendererManager.StartScan()
+            else Player.rendererManager.StopScan()
             break
         case "repeat":
             AwakeningPreferences.setValue("repeat", value === "one")

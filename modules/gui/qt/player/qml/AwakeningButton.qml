@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Templates as T
 import VLC.Style
+import VLC.MainInterface
 
 T.Button {
     id: control
@@ -25,11 +26,11 @@ T.Button {
 
     background: Rectangle {
         radius: 6 * control.uiScale
-        color: control.accent ? (control.down || control.externalPressed ? "#b56613" : "#d37918")
-                              : (control.down || control.externalPressed || control.checked ? "#373737"
-                                 : control.hovered || control.externalHovered ? "#292929" : "transparent")
+        color: control.accent ? (control.down || control.externalPressed ? AwakeningTheme.accentDim : AwakeningTheme.accent)
+                              : (control.down || control.externalPressed || control.checked ? AwakeningTheme.selected
+                                 : control.hovered || control.externalHovered ? AwakeningTheme.surface : "transparent")
         border.width: control.visualFocus ? 1 : 0
-        border.color: "#d37918"
+        border.color: AwakeningTheme.accent
     }
 
     contentItem: Item {
@@ -37,7 +38,7 @@ T.Button {
             anchors.centerIn: parent
             width: control.artworkSize * control.uiScale
             height: width
-            source: "qrc:/awakening/" + control.artwork + ".svg"
+            source: "qrc:/awakening/" + (AwakeningTheme.light && !["pause", "muted"].includes(control.artwork) ? "light/" : "") + control.artwork + ".svg"
             sourceSize: Qt.size(width * Screen.devicePixelRatio, height * Screen.devicePixelRatio)
             fillMode: Image.PreserveAspectFit
             mirror: control.mirroredArtwork

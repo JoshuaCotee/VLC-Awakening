@@ -264,14 +264,7 @@ MainCtx::MainCtx(qt_intf_t *_p_intf)
     /* Register callback for the intf-popupmenu variable */
     var_AddCallback( libvlc, "intf-popupmenu", PopupMenuCB, p_intf );
 
-    if( var_InheritBool( p_intf, "qt-privacy-ask") )
-    {
-        //postpone dialog call, as composition might not be ready yet
-        QMetaObject::invokeMethod(this, [](){
-            THEDP->firstRunDialog();
-        }, Qt::QueuedConnection);
-    }
-    else if (m_medialib)
+    if (!var_InheritBool(p_intf, "qt-privacy-ask") && m_medialib)
     {
         QMetaObject::invokeMethod(m_medialib, &MediaLib::reload, Qt::QueuedConnection);
     }

@@ -11,6 +11,9 @@ T.Button {
     implicitHeight: 32 * unit
     hoverEnabled: true
     focusPolicy: Qt.StrongFocus
+    font.family: AwakeningTheme.fontFamily
+    font.pixelSize: 14 * unit
+    font.weight: Font.Normal
     Accessible.name: text
     opacity: enabled ? 1 : 0.4
     background: Rectangle {
@@ -24,7 +27,7 @@ T.Button {
     contentItem: AwakeningText {
         text: control.text
         color: control.accent ? AwakeningTheme.accent : AwakeningTheme.text
-        font.weight: Font.DemiBold
+        font: control.font
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
     }

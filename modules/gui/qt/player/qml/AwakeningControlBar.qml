@@ -36,7 +36,7 @@ T.Pane {
     AccessibleCompat.id: "playerControlBar"
 
     FontLoader { id: inter; source: "qrc:/awakening/Inter.ttf" }
-    background: Rectangle { color: "#1b1b1b" }
+    background: Rectangle { color: AwakeningTheme.window }
 
     contentItem: GridLayout {
         columns: root.narrow ? 4 : 5
@@ -86,7 +86,7 @@ T.Pane {
             T.Label {
                 Layout.preferredWidth: 76 * root.uiScale
                 text: Player.time.valid() ? Player.time.formatHMS() : "00:00"
-                color: "#8f8f8f"
+                color: AwakeningTheme.text
                 font.family: inter.name
                 font.pixelSize: 15 * root.uiScale
                 horizontalAlignment: Text.AlignHCenter
@@ -113,16 +113,16 @@ T.Pane {
                     when: !seek.pressed
                 }
                 background: Rectangle {
-                    color: "#090909"
+                    color: AwakeningTheme.field
                     radius: 6 * root.uiScale
                     border.width: seek.visualFocus ? 1 : 0
-                    border.color: "#d37918"
+                    border.color: AwakeningTheme.accent
                     Rectangle {
                         x: 2 * root.uiScale
                         y: 2 * root.uiScale
                         height: parent.height - 4 * root.uiScale
                         width: Math.max(0, (parent.width - 4 * root.uiScale) * seek.visualPosition)
-                        color: "#371f06"
+                        color: AwakeningTheme.accentBackground
                         radius: 4 * root.uiScale
                     }
                 }
@@ -132,7 +132,7 @@ T.Pane {
                     width: 8 * root.uiScale
                     height: 24 * root.uiScale
                     radius: 4 * root.uiScale
-                    color: "#d37918"
+                    color: AwakeningTheme.accent
                     visible: seek.enabled
                 }
                 HoverHandler { id: seekHover }
@@ -143,7 +143,7 @@ T.Pane {
             T.Label {
                 Layout.preferredWidth: 76 * root.uiScale
                 text: Player.length.valid() ? Player.length.formatHMS() : "00:00"
-                color: "#8f8f8f"
+                color: AwakeningTheme.text
                 font.family: inter.name
                 font.pixelSize: 15 * root.uiScale
                 horizontalAlignment: Text.AlignHCenter
@@ -203,7 +203,7 @@ T.Pane {
                     Rectangle {
                         anchors.fill: parent
                         color: "transparent"
-                        border.color: "#d37918"
+                        border.color: AwakeningTheme.accent
                         border.width: volume.visualFocus ? 1 : 0
                         radius: 4 * root.uiScale
                     }

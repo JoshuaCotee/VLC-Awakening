@@ -35,8 +35,8 @@ FocusScope {
 
     Rectangle {
         anchors.fill: parent
-        color: MainCtx.hasEmbededVideo ? "transparent" : "#1b1b1b"
-        border.color: "#1b1b1b"
+        color: MainCtx.hasEmbededVideo ? "transparent" : AwakeningTheme.window
+        border.color: AwakeningTheme.window
         border.width: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
         z: -1
     }
@@ -329,7 +329,7 @@ FocusScope {
                             radius: parent.width * 2
                             color: "transparent"
                             border.width: parent.width
-                            border.color: "#1b1b1b"
+                            border.color: AwakeningTheme.window
                             antialiasing: true
                         }
                     }

@@ -11,21 +11,27 @@ Item {
     required property var setting
     required property var settingsView
     readonly property real unit: AwakeningTheme.scale
-    readonly property var metadata: setting.option ? AwakeningPreferences.describe(setting.option) : ({})
+    readonly property string optionName: {
+        AwakeningPreferences.revision
+        return setting.option === "freetype-rel-fontsize" && AwakeningPreferences.value("freetype-fontsize") > 0
+            ? "freetype-fontsize" : setting.option || ""
+    }
+    readonly property var metadata: optionName ? AwakeningPreferences.describe(optionName) : ({})
     readonly property var currentValue: {
         AwakeningPreferences.revision
         if (setting.special)
             return settingsView.readSpecial(setting.special)
         if (setting.filter)
             return AwakeningPreferences.filterEnabled(setting.chain, setting.filter)
-        return setting.option ? AwakeningPreferences.value(setting.option) : undefined
+        return optionName ? AwakeningPreferences.value(optionName) : undefined
     }
-    readonly property bool available: !!setting.action || currentValue !== undefined
+    readonly property bool available: !!setting.action || (currentValue !== undefined && currentValue !== null)
     readonly property var choices: setting.choices || (setting.special ? settingsView.specialChoices(setting.special) : metadata.choices) || []
     readonly property string kind: {
         if (setting.action) return "action"
         if (setting.special === "theme") return "segments"
         if (setting.special === "accent") return "colors"
+        if (setting.special === "startupVolume") return "startupVolume"
         if (setting.kind && setting.kind !== "auto") return setting.kind
         if (choices.length) return "select"
         return metadata.type || "text"
@@ -43,8 +49,8 @@ Item {
         }
         if (setting.effect) {
             AwakeningPreferences.setFilterEnabled("video-filter", setting.effect, true)
-            AwakeningPreferences.setEffectValue(setting.option, value, false)
-        } else if (AwakeningPreferences.setValue(setting.option, value)) {
+            AwakeningPreferences.setEffectValue(optionName, value, false)
+        } else if (AwakeningPreferences.setValue(optionName, value)) {
             if (setting.live === "onTop") MainCtx.interfaceAlwaysOnTop = value
             if (setting.live === "pinControls") MainCtx.pinVideoControls = value
             if (setting.live === "shuffle") MainPlaylistController.random = value
@@ -83,7 +89,7 @@ Item {
         width: Math.min((root.kind === "toggle" ? 68
               : root.kind === "action" && root.setting.buttonText.length < 12 ? 100 : 320) * root.unit,
               Math.max(160 * root.unit, root.width * 0.55))
-        height: (root.kind === "slider" && root.setting.ticks ? 57
+        height: (root.kind === "startupVolume" ? 88 : root.kind === "slider" && root.setting.ticks ? 57
                : root.kind === "toggle" || root.kind === "action" ? 32 : 36) * root.unit
         enabled: root.available
         sourceComponent: {
@@ -95,6 +101,7 @@ Item {
             case "action": return action
             case "segments": return segments
             case "colors": return colors
+            case "startupVolume": return startupVolume
             default: return field
             }
         }
@@ -236,6 +243,35 @@ Item {
                             color: parent.accent ? AwakeningTheme.accent : AwakeningTheme.muted
                         }
                     }
+                }
+            }
+        }
+    }
+    Component {
+        id: startupVolume
+        Column {
+            spacing: 10 * root.unit
+            RowLayout {
+                width: parent.width
+                AwakeningText { text: qsTr("Remember last volume"); Layout.fillWidth: true }
+                AwakeningSwitch {
+                    checked: root.currentValue < 0
+                    onClicked: root.commit(checked ? -1 : 100)
+                }
+            }
+            RowLayout {
+                width: parent.width
+                AwakeningSlider {
+                    Layout.fillWidth: true
+                    from: 0; to: 125; stepSize: 1
+                    enabled: root.currentValue >= 0
+                    value: Math.max(0, root.currentValue)
+                    onMoved: root.commit(value)
+                }
+                AwakeningText {
+                    Layout.preferredWidth: 45 * root.unit
+                    horizontalAlignment: Text.AlignRight
+                    text: root.currentValue < 0 ? "" : Math.round(root.currentValue) + "%"
                 }
             }
         }

@@ -45,6 +45,9 @@ Item {
     Accessible.role: Accessible.Client
     Accessible.name: qsTr("Main interface")
     AccessibleCompat.id: "mainInterface"
+    Component.onCompleted: {
+        if (MainCtx.hasFirstrun) AwakeningUi.dialog = "onboarding"
+    }
 
     property bool _extendedFrameVisible: MainCtx.windowSuportExtendedFrame
                                       && MainCtx.clientSideDecoration
@@ -338,10 +341,11 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: ["settings", "shortcuts", "network"].includes(AwakeningUi.dialog)
+            active: ["settings", "shortcuts", "network", "onboarding"].includes(AwakeningUi.dialog)
             source: "qrc:/qt/qml/VLC/MainInterface/" + ({
                 settings: "AwakeningSettings.qml",
                 shortcuts: "AwakeningShortcuts.qml",
+                onboarding: "AwakeningOnboarding.qml",
                 network: "AwakeningNetwork.qml"
             }[AwakeningUi.dialog] || "AwakeningSettings.qml")
         }

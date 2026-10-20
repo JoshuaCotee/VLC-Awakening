@@ -23,6 +23,7 @@
         <file alias="volume.svg">pixmaps/awakening/volume.svg</file>
     </qresource>
     <qresource prefix="/awakening/design">
+        <file alias="welcome-logo.svg">pixmaps/awakening/design/welcome-logo.svg</file>
         <file alias="audio-active.svg">pixmaps/awakening/design/audio-active.svg</file>
         <file alias="audio.svg">pixmaps/awakening/design/audio.svg</file>
         <file alias="chevron-down.svg">pixmaps/awakening/design/chevron-down.svg</file>
@@ -195,5 +196,37 @@
         <file alias="addon_magenta.svg">pixmaps/addons/addon_magenta.svg</file>
         <file alias="addon_red.svg">pixmaps/addons/addon_red.svg</file>
         <file alias="addon_yellow.svg">pixmaps/addons/addon_yellow.svg</file>
+    </qresource>
+    <qresource prefix="/awakening/light">
+        <file alias="logo.svg">pixmaps/awakening/light/logo.svg</file>
+        <file alias="more.svg">pixmaps/awakening/light/more.svg</file>
+        <file alias="sidebar.svg">pixmaps/awakening/light/sidebar.svg</file>
+        <file alias="divider.svg">pixmaps/awakening/light/divider.svg</file>
+        <file alias="folder.svg">pixmaps/awakening/light/folder.svg</file>
+        <file alias="minimize.svg">pixmaps/awakening/light/minimize.svg</file>
+        <file alias="maximize.svg">pixmaps/awakening/light/maximize.svg</file>
+        <file alias="fullscreen.svg">pixmaps/awakening/light/fullscreen.svg</file>
+        <file alias="close.svg">pixmaps/awakening/light/close.svg</file>
+        <file alias="play.svg">pixmaps/awakening/light/play.svg</file>
+        <file alias="volume.svg">pixmaps/awakening/light/volume.svg</file>
+        <file alias="audio.svg">pixmaps/awakening/light/audio.svg</file>
+        <file alias="subtitles.svg">pixmaps/awakening/light/subtitles.svg</file>
+        <file alias="settings.svg">pixmaps/awakening/light/settings.svg</file>
+        <file alias="lists.svg">pixmaps/awakening/light/lists.svg</file>
+        <file alias="previous.svg">pixmaps/awakening/light/previous.svg</file>
+        <file alias="next.svg">pixmaps/awakening/light/next.svg</file>
+        <file alias="home.svg">pixmaps/awakening/light/home.svg</file>
+        <file alias="videos.svg">pixmaps/awakening/light/videos.svg</file>
+        <file alias="library-settings.svg">pixmaps/awakening/light/library-settings.svg</file>
+        <file alias="streaming.svg">pixmaps/awakening/light/streaming.svg</file>
+        <file alias="playlist.svg">pixmaps/awakening/light/playlist.svg</file>
+        <file alias="recent.svg">pixmaps/awakening/light/recent.svg</file>
+        <file alias="add.svg">pixmaps/awakening/light/add.svg</file>
+        <file alias="back.svg">pixmaps/awakening/light/back.svg</file>
+        <file alias="forward.svg">pixmaps/awakening/light/forward.svg</file>
+        <file alias="open.svg">pixmaps/awakening/light/open.svg</file>
+        <file alias="sort.svg">pixmaps/awakening/light/sort.svg</file>
+        <file alias="list.svg">pixmaps/awakening/light/list.svg</file>
+        <file alias="search.svg">pixmaps/awakening/light/search.svg</file>
     </qresource>
 </RCC>

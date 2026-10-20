@@ -1692,6 +1692,9 @@ vlc_module_begin ()
               KEYBOARD_EVENTS_LONGTEXT )
     add_bool( "mouse-events", true, MOUSE_EVENTS_TEXT,
               MOUSE_EVENTS_LONGTEXT )
+    add_bool("mouse-doubleclick-fullscreen", true,
+             N_("Toggle fullscreen on double click"),
+             N_("Double click the video with the left mouse button to enter or leave fullscreen."))
     add_string( "mouse-pause-policy", ppsz_mouse_pause_policy_values[0], MOUSE_PAUSE_POLICY_TEXT,
               MOUSE_PAUSE_POLICY_LONGTEXT);
         change_string_list(ppsz_mouse_pause_policy_values, ppsz_mouse_pause_policy_descriptions)
@@ -1806,6 +1809,9 @@ vlc_module_begin ()
     add_bool( "spu-fill", true, SPU_FULL_TEXT, SPU_FULL_LONGTEXT )
         change_safe ()
     add_bool( "osd", true, OSD_TEXT, OSD_LONGTEXT )
+    add_integer("osd-duration", 1000, N_("Shortcut feedback duration"),
+                N_("Time in milliseconds to display playback feedback."))
+        change_integer_range(0, 10000)
     add_module("text-renderer", "text renderer", "any",
                TEXTRENDERER_TEXT, TEXTRENDERER_LONGTEXT)
 
@@ -1924,6 +1930,9 @@ vlc_module_begin ()
         change_safe ()
 
     add_bool( "save-recentplay", true, SAVE_RECENTPLAY, NULL )
+    add_string("history-exclude", "",
+               N_("Never remember matching media"),
+               N_("Semicolon-separated text to match against media paths or URLs, ignoring case."))
 
     add_integer( "restore-playback-pos", VLC_PLAYER_RESTORE_PLAYBACK_POS_ASK,
                  RESTORE_PLAYBACK_POS_TEXT, RESTORE_PLAYBACK_POS_LONGTEXT )
@@ -2276,6 +2285,8 @@ vlc_module_begin ()
     add_integer( "hotkeys-y-wheel-mode", 0, MOUSE_Y_WHEEL_MODE_TEXT,
                  MOUSE_Y_WHEEL_MODE_LONGTEXT )
         change_integer_list( mouse_wheel_values, mouse_wheel_texts )
+    add_bool("hotkeys-reverse-wheel", false, N_("Reverse mouse wheel controls"),
+             N_("Reverse the playback and volume actions of both mouse wheel axes."))
     add_integer( "hotkeys-x-wheel-mode", 2, MOUSE_X_WHEEL_MODE_TEXT,
                  MOUSE_X_WHEEL_MODE_LONGTEXT )
         change_integer_list( mouse_wheel_values, mouse_wheel_texts )

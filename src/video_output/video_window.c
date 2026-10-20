@@ -193,7 +193,8 @@ static void vout_display_window_MouseEvent(vlc_window_t *window,
                                           &state->format, &state->display);
     vlc_mutex_unlock(&state->lock);
 
-    if (video_mouse.b_double_click && vlc_mouse_IsLeftPressed(&video_mouse))
+    if (video_mouse.b_double_click && vlc_mouse_IsLeftPressed(&video_mouse)
+        && var_InheritBool(vout, "mouse-doubleclick-fullscreen"))
         var_ToggleBool(vout, "fullscreen");
 
     /* Stop propagation if the event was consumed by a video filter */

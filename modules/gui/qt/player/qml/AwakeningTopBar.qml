@@ -39,7 +39,7 @@ FocusScope {
     Accessible.role: Accessible.ToolBar
     Accessible.name: qsTr("Player title bar")
     FontLoader { id: inter; source: "qrc:/awakening/Inter.ttf" }
-    Rectangle { anchors.fill: parent; color: "#1b1b1b" }
+    Rectangle { anchors.fill: parent; color: AwakeningTheme.window }
     Loader {
         anchors.fill: parent
         active: root.showCSD
@@ -91,7 +91,7 @@ FocusScope {
             Layout.leftMargin: 4 * root.uiScale
             visible: root.width > 750 * root.uiScale
             text: qsTr("Videos")
-            color: "#8f8f8f"
+            color: AwakeningTheme.text
             font.family: inter.name
             font.pixelSize: 14 * root.uiScale
             TapHandler { onTapped: root.backRequested() }
@@ -104,7 +104,7 @@ FocusScope {
         text: "VLC Awakening"
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
-        color: "#8f8f8f"
+        color: AwakeningTheme.text
         font.family: inter.name
         font.pixelSize: 14 * root.uiScale
     }

@@ -565,9 +565,12 @@ int libvlc_InternalActionsInit (libvlc_int_t *libvlc)
     as->ppsz_keys[ARRAY_SIZE(s_names2actions)] = NULL;
 
     /* Initialize mouse wheel events */
-    add_wheel_mapping (&as->map, KEY_MOUSEWHEELRIGHT, KEY_MOUSEWHEELLEFT,
+    const bool reverse_wheel = var_InheritBool(obj, "hotkeys-reverse-wheel");
+    add_wheel_mapping (&as->map, reverse_wheel ? KEY_MOUSEWHEELLEFT : KEY_MOUSEWHEELRIGHT,
+                         reverse_wheel ? KEY_MOUSEWHEELRIGHT : KEY_MOUSEWHEELLEFT,
                          var_InheritInteger (obj, "hotkeys-x-wheel-mode"));
-    add_wheel_mapping (&as->map, KEY_MOUSEWHEELUP, KEY_MOUSEWHEELDOWN,
+    add_wheel_mapping (&as->map, reverse_wheel ? KEY_MOUSEWHEELDOWN : KEY_MOUSEWHEELUP,
+                         reverse_wheel ? KEY_MOUSEWHEELUP : KEY_MOUSEWHEELDOWN,
                          var_InheritInteger (obj, "hotkeys-y-wheel-mode"));
 
     libvlc_priv(libvlc)->actions = as;

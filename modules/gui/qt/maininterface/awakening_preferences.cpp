@@ -9,11 +9,13 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QKeyEvent>
+#include <QStandardPaths>
 #include <cmath>
 #include <vlc_actions.h>
 #include <vlc_variables.h>
 #include <vlc_player.h>
 #include <vlc_modules.h>
+#include <vlc_plugin.h>
 
 AwakeningPreferences::AwakeningPreferences(qt_intf_t *intf, QObject *parent)
     : QObject(parent), m_intf(intf)
@@ -375,4 +377,14 @@ void AwakeningPreferences::setInterfaceEnabled(const QString &name, bool enabled
     else
         config_RemoveIntf(qtu(name));
     changed();
+}
+
+QUrl AwakeningPreferences::localUrl(const QString &path) const
+{
+    return QUrl::fromLocalFile(path);
+}
+
+QString AwakeningPreferences::mediaFolder() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
 }

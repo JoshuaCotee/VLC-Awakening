@@ -291,7 +291,10 @@ QtObject {
                             "0 s",
                             "5 s",
                             "10s"
-                        ]
+                        ],
+                        "minimum": 0,
+                        "maximum": 10000,
+                        "step": 500
                     }
                 ]
             },
@@ -344,8 +347,8 @@ QtObject {
                         "label": "Never remember items matching",
                         "height": 46,
                         "info": false,
-                        "special": "historyExclude",
-                        "kind": "auto"
+                        "kind": "auto",
+                        "option": "history-exclude"
                     },
                     {
                         "id": "3062:12481",
@@ -477,7 +480,7 @@ QtObject {
                         "label": "Single click on the video",
                         "height": 46,
                         "info": false,
-                        "option": "mouse-click-action",
+                        "option": "mouse-pause-policy",
                         "kind": "select"
                     },
                     {
@@ -485,8 +488,18 @@ QtObject {
                         "label": "Double click on the video",
                         "height": 46,
                         "info": false,
-                        "option": "mouse-doubleclick-action",
-                        "kind": "select"
+                        "option": "mouse-doubleclick-fullscreen",
+                        "kind": "select",
+                        "choices": [
+                            {
+                                "text": "Toggle fullscreen",
+                                "value": true
+                            },
+                            {
+                                "text": "Do nothing",
+                                "value": false
+                            }
+                        ]
                     },
                     {
                         "id": "6540:15156",
@@ -509,8 +522,8 @@ QtObject {
                         "label": "Reverse scroll direction",
                         "height": 42,
                         "info": false,
-                        "special": "reverseScroll",
-                        "kind": "toggle"
+                        "kind": "toggle",
+                        "option": "hotkeys-reverse-wheel"
                     }
                 ]
             },
@@ -554,8 +567,8 @@ QtObject {
                         "label": "Reverse scroll direction",
                         "height": 42,
                         "info": false,
-                        "special": "reverseScroll",
-                        "kind": "toggle"
+                        "kind": "toggle",
+                        "option": "hotkeys-reverse-wheel"
                     }
                 ]
             },
@@ -1478,12 +1491,15 @@ QtObject {
                         "label": "Show feedback for",
                         "height": 67,
                         "info": false,
-                        "special": "osdDuration",
                         "kind": "slider",
                         "ticks": [
                             "0.5 s",
                             "5 s"
-                        ]
+                        ],
+                        "option": "osd-duration",
+                        "minimum": 500,
+                        "maximum": 5000,
+                        "step": 100
                     },
                     {
                         "id": "3191:19144",
@@ -1823,7 +1839,7 @@ QtObject {
                         "label": "Clock reference averaging",
                         "height": 48,
                         "info": false,
-                        "option": "clock-average",
+                        "option": "cr-average",
                         "kind": "auto"
                     }
                 ]

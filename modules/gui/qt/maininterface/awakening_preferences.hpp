@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVariant>
+#include <QUrl>
 
 class AwakeningPreferences final : public QObject
 {
@@ -39,6 +40,8 @@ public:
     Q_INVOKABLE bool selectAudioDevice(int row);
     Q_INVOKABLE bool interfaceEnabled(const QString &name) const;
     Q_INVOKABLE void setInterfaceEnabled(const QString &name, bool enabled);
+    Q_INVOKABLE QUrl localUrl(const QString &path) const;
+    Q_INVOKABLE QString mediaFolder() const;
 
 signals:
     void valuesChanged();

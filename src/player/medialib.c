@@ -23,8 +23,38 @@
 #endif
 
 #include <vlc_common.h>
+#include <vlc_charset.h>
+#include <vlc_url.h>
 #include "player.h"
 #include "misc/variables.h"
+
+static bool HistoryExcluded(struct vlc_player_input *input, const char *uri)
+{
+    char *patterns = var_InheritString(input->thread, "history-exclude");
+    if (!patterns)
+        return false;
+    char *decoded = vlc_uri_decode_duplicate(uri);
+    const char *path = decoded ? decoded : uri;
+    bool excluded = false;
+    char *next = NULL;
+    for (char *pattern = strtok_r(patterns, ";", &next); pattern;
+         pattern = strtok_r(NULL, ";", &next))
+    {
+        while (*pattern == ' ' || *pattern == '\t')
+            ++pattern;
+        size_t length = strlen(pattern);
+        while (length && (pattern[length - 1] == ' ' || pattern[length - 1] == '\t'))
+            pattern[--length] = '\0';
+        if (length && vlc_strcasestr(path, pattern))
+        {
+            excluded = true;
+            break;
+        }
+    }
+    free(decoded);
+    free(patterns);
+    return excluded;
+}
 
 void
 vlc_player_input_RestoreMlStates(struct vlc_player_input* input, bool force_pos)
@@ -44,6 +74,8 @@ vlc_player_input_RestoreMlStates(struct vlc_player_input* input, bool force_pos)
     if (!ml)
         return;
     input_item_t* item = input_GetItem(input->thread);
+    if (!item || HistoryExcluded(input, item->psz_uri))
+        return;
     vlc_ml_media_t* media = vlc_ml_get_media_by_mrl( ml, item->psz_uri);
     if (!media)
         return;
@@ -179,7 +211,7 @@ vlc_player_UpdateMLStates(vlc_player_t *player, struct vlc_player_input* input)
     if (!ml)
         return;
     input_item_t* item = input_GetItem(input->thread);
-    if (!item)
+    if (!item || HistoryExcluded(input, item->psz_uri))
         return;
     vlc_ml_media_t* media = vlc_ml_get_media_by_mrl(ml, item->psz_uri);
     if (!media)

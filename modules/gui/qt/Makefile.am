@@ -846,6 +846,37 @@ libqt_plugin_la_RES = \
 	pixmaps/awakening/next.svg \
 	pixmaps/awakening/OFL.txt \
 	pixmaps/awakening/pause.svg \
+	pixmaps/awakening/light/logo.svg \
+	pixmaps/awakening/light/more.svg \
+	pixmaps/awakening/light/sidebar.svg \
+	pixmaps/awakening/light/divider.svg \
+	pixmaps/awakening/light/folder.svg \
+	pixmaps/awakening/light/minimize.svg \
+	pixmaps/awakening/light/maximize.svg \
+	pixmaps/awakening/light/fullscreen.svg \
+	pixmaps/awakening/light/close.svg \
+	pixmaps/awakening/light/play.svg \
+	pixmaps/awakening/light/volume.svg \
+	pixmaps/awakening/light/audio.svg \
+	pixmaps/awakening/light/subtitles.svg \
+	pixmaps/awakening/light/settings.svg \
+	pixmaps/awakening/light/lists.svg \
+	pixmaps/awakening/light/previous.svg \
+	pixmaps/awakening/light/next.svg \
+	pixmaps/awakening/light/home.svg \
+	pixmaps/awakening/light/videos.svg \
+	pixmaps/awakening/light/library-settings.svg \
+	pixmaps/awakening/light/streaming.svg \
+	pixmaps/awakening/light/playlist.svg \
+	pixmaps/awakening/light/recent.svg \
+	pixmaps/awakening/light/add.svg \
+	pixmaps/awakening/light/back.svg \
+	pixmaps/awakening/light/forward.svg \
+	pixmaps/awakening/light/open.svg \
+	pixmaps/awakening/light/sort.svg \
+	pixmaps/awakening/light/list.svg \
+	pixmaps/awakening/light/search.svg \
+	pixmaps/awakening/design/welcome-logo.svg \
 	pixmaps/awakening/play.svg \
 	pixmaps/awakening/previous.svg \
 	pixmaps/awakening/queue.svg \
@@ -1122,6 +1153,7 @@ libqml_module_maininterface_a_CXXFLAGS = $(libqt_plugin_la_CXXFLAGS)
 libqml_module_maininterface_a_CPPFLAGS = $(libqt_plugin_la_CPPFLAGS)
 libqml_module_maininterface_a_QML = \
 	maininterface/qml/AwakeningAction.qml \
+	maininterface/qml/AwakeningOnboarding.qml \
 	maininterface/qml/AwakeningShortcuts.qml \
 	maininterface/qml/AwakeningNetwork.qml \
 	maininterface/qml/AwakeningMenu.qml \

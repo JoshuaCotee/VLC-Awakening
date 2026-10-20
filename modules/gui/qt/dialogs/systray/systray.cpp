@@ -19,6 +19,7 @@
 #include "systray.hpp"
 
 #include <QImageReader>
+#include <QSettings>
 
 #include "maininterface/mainctx.hpp"
 #include "menus/menus.hpp"
@@ -128,7 +129,9 @@ void VLCSystray::updateTooltipName( const QString& name )
             ( m_notificationSetting == NOTIFICATION_MINIMIZED && (windowVisiblity == QWindow::Hidden || windowVisiblity == QWindow::Minimized)))
         {
             const auto showMessageTemplate = [this, &name](const auto &icon) {
-                showMessage( qtr( "VLC media player" ), name, icon, 3000 );
+                const int duration = m_intf->mainSettings->value(
+                    QStringLiteral("Awakening/notificationDuration"), 3000).toInt();
+                showMessage(qtr("VLC media player"), name, icon, duration);
             };
 
             assert(m_intf);

@@ -137,7 +137,8 @@ void vout_OSDMessageVa(vout_thread_t *vout, int channel,
     char *string;
     if (vasprintf(&string, format, args) != -1) {
         vout_OSDText(vout, channel,
-                     SUBPICTURE_ALIGN_TOP|SUBPICTURE_ALIGN_RIGHT, VLC_TICK_FROM_SEC(1),
+                     SUBPICTURE_ALIGN_TOP|SUBPICTURE_ALIGN_RIGHT,
+                     VLC_TICK_FROM_MS(var_InheritInteger(vout, "osd-duration")),
                      string);
         free(string);
     }

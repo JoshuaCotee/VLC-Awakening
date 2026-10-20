@@ -419,7 +419,7 @@ vlc_AudioVolumeDuckNotification_OnVolumeDuckNotification(
 
     msg_Dbg(aout, "volume ducked by %ls of %u sessions", sid, count);
     sys->ducks++;
-    aout_PolicyReport(aout, true);
+    aout_PolicyReport(aout, var_InheritBool(aout, "mmdevice-ducking"));
     return S_OK;
 }
 
@@ -432,7 +432,7 @@ vlc_AudioVolumeDuckNotification_OnVolumeUnduckNotification(
 
     msg_Dbg(aout, "volume unducked by %ls", sid);
     sys->ducks--;
-    aout_PolicyReport(aout, sys->ducks != 0);
+    aout_PolicyReport(aout, var_InheritBool(aout, "mmdevice-ducking") && sys->ducks != 0);
     return S_OK;
 }
 
@@ -1582,6 +1582,9 @@ vlc_module_begin()
         change_integer_list( pi_mmdevice_passthrough_values,
                              ppsz_mmdevice_passthrough_texts )
     add_string("mmdevice-audio-device", NULL, DEVICE_TEXT, DEVICE_LONGTEXT)
+    add_bool("mmdevice-ducking", true,
+             N_("Pause when another app requests audio focus"),
+             N_("Pause playback during Windows communications audio sessions."))
     add_float("mmdevice-volume", 1.f, VOLUME_TEXT, VOLUME_LONGTEXT)
         change_float_range( 0.f, 1.25f )
 vlc_module_end()
