@@ -5,17 +5,23 @@
 #include "util/color_scheme_model.hpp"
 #include "util/audio_device_model.hpp"
 #include "util/vlchotkeyconverter.hpp"
+#include "medialibrary/mlthreadpool.hpp"
 
 #include <QFileDialog>
 #include <QSettings>
 #include <QKeyEvent>
 #include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QImageReader>
+#include <QCryptographicHash>
 #include <cmath>
 #include <vlc_actions.h>
 #include <vlc_variables.h>
 #include <vlc_player.h>
 #include <vlc_modules.h>
 #include <vlc_plugin.h>
+#include <vlc_interface.h>
 
 AwakeningPreferences::AwakeningPreferences(qt_intf_t *intf, QObject *parent)
     : QObject(parent), m_intf(intf)
@@ -387,4 +393,67 @@ QUrl AwakeningPreferences::localUrl(const QString &path) const
 QString AwakeningPreferences::mediaFolder() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+}
+
+quint64 AwakeningPreferences::requestFolder(const QUrl &url)
+{
+    struct Listing { QVariantList items; QString error; };
+    const bool hidden = value(QStringLiteral("show-hiddenfiles")).toBool();
+    return m_intf->p_mi->threadRunner()->runOnThread<Listing>(this,
+        [url, hidden](Listing &result) {
+            QDir directory(url.toLocalFile());
+            if (!url.isLocalFile() || !directory.exists() || !QFileInfo(directory.path()).isReadable())
+            {
+                result.error = tr("This folder is unavailable.");
+                return;
+            }
+            auto filters = QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot;
+            if (hidden) filters |= QDir::Hidden;
+            const auto extensions = QStringLiteral(EXTENSIONS_MEDIA).split(';');
+            const auto files = directory.entryInfoList(filters, QDir::DirsFirst | QDir::Name | QDir::IgnoreCase);
+            for (const auto &file : files)
+            {
+                if (!file.isDir() && !QDir::match(extensions, file.fileName()))
+                    continue;
+                result.items.append(QVariantMap{
+                    {QStringLiteral("title"), file.fileName()},
+                    {QStringLiteral("url"), QUrl::fromLocalFile(file.absoluteFilePath())},
+                    {QStringLiteral("isFolder"), file.isDir()}
+                });
+            }
+        },
+        [this, url](quint64 taskId, Listing &result) {
+            emit folderLoaded(taskId, url, result.items, result.error);
+        });
+}
+
+QList<QUrl> AwakeningPreferences::chooseMediaFiles()
+{
+    return QFileDialog::getOpenFileUrls(nullptr, tr("Select media files"), {},
+        tr("Media files (%1);;All files (*)").arg(QStringLiteral(EXTENSIONS_MEDIA).replace(';', ' ')));
+}
+
+QUrl AwakeningPreferences::chooseArtwork()
+{
+    const auto path = QFileDialog::getOpenFileName(nullptr, tr("Choose playlist thumbnail"), {},
+                                                  tr("Images (*.png *.jpg *.jpeg *.webp)"));
+    if (path.isEmpty())
+        return {};
+    QFile file(path);
+    if (file.size() > 20 * 1024 * 1024 || !QImageReader(path).canRead() || !file.open(QIODevice::ReadOnly))
+    {
+        setError(tr("Choose a readable image smaller than 20 MB."));
+        return {};
+    }
+    const auto digest = QCryptographicHash::hash(file.readAll(), QCryptographicHash::Sha256).toHex();
+    const auto directory = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+                           + QStringLiteral("/Awakening/artwork");
+    const auto destination = directory + '/' + QString::fromLatin1(digest) + '.'
+                             + QFileInfo(path).suffix().toLower();
+    if (!QDir().mkpath(directory) || (!QFile::exists(destination) && !QFile::copy(path, destination)))
+    {
+        setError(tr("The playlist thumbnail could not be saved."));
+        return {};
+    }
+    return QUrl::fromLocalFile(destination);
 }

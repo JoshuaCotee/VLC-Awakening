@@ -22,7 +22,7 @@ T.Popup {
     onOpened: MainCtx.preferHotkeys = false
     onClosed: MainCtx.preferHotkeys = MainCtx.playerView
     background: Rectangle { color: AwakeningTheme.panel; radius: 14 * root.unit }
-    MLFoldersModel { id: folders; ctx: MainCtx }
+    MLFolderModel { id: folders; ctx: MainCtx }
     function finish() {
         if (folder.text.trim() && MainCtx.mediaLibraryAvailable)
             folders.add(AwakeningPreferences.localUrl(folder.text.trim()))
@@ -146,7 +146,8 @@ T.Popup {
                     width: 1920 * AwakeningTheme.scale
                     height: 54 * AwakeningTheme.scale
                     transform: Scale { xScale: 0.55 * root.unit / AwakeningTheme.scale; yScale: xScale }
-                    AwakeningControlBar { anchors.fill: parent; enabled: false }
+                    AwakeningControlBar { anchors.fill: parent }
+                    MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons; onWheel: wheel => wheel.accepted = true }
                 }
             }
             AwakeningText {

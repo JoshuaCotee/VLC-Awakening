@@ -38,7 +38,8 @@ T.Button {
             anchors.centerIn: parent
             width: control.artworkSize * control.uiScale
             height: width
-            source: "qrc:/awakening/" + (AwakeningTheme.light && !["pause", "muted"].includes(control.artwork) ? "light/" : "") + control.artwork + ".svg"
+            source: "qrc:/awakening/" + (AwakeningTheme.light && !["pause", "muted"].includes(control.artwork) ? "light/" : "")
+                + (AwakeningTheme.light && control.artwork === "queue" ? "lists" : control.artwork) + ".svg"
             sourceSize: Qt.size(width * Screen.devicePixelRatio, height * Screen.devicePixelRatio)
             fillMode: Image.PreserveAspectFit
             mirror: control.mirroredArtwork

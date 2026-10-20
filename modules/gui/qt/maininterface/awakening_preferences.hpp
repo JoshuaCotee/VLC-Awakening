@@ -42,10 +42,14 @@ public:
     Q_INVOKABLE void setInterfaceEnabled(const QString &name, bool enabled);
     Q_INVOKABLE QUrl localUrl(const QString &path) const;
     Q_INVOKABLE QString mediaFolder() const;
+    Q_INVOKABLE quint64 requestFolder(const QUrl &url);
+    Q_INVOKABLE QList<QUrl> chooseMediaFiles();
+    Q_INVOKABLE QUrl chooseArtwork();
 
 signals:
     void valuesChanged();
     void errorChanged();
+    void folderLoaded(quint64 requestId, const QUrl &url, const QVariantList &items, const QString &error);
 
 private:
     void changed();

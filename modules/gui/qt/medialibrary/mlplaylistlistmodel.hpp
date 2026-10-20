@@ -105,6 +105,8 @@ private: // MLBaseModel implementation
     void onVlcMlEvent(const MLEvent & event) override;
 
 signals:
+    void created(const MLItemId &playlistId);
+    void creationFailed(const QString &error);
     void coverSizeChanged   ();
     void coverDefaultChanged();
     void coverPrefixChanged ();

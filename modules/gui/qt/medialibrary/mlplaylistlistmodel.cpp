@@ -72,6 +72,50 @@ void appendMediaIntoPlaylist(vlc_medialibrary_t* ml, int64_t playlistId, const s
     }
 }
 
+void appendPlaylistItems(vlc_medialibrary_t *ml, int64_t playlistId, const QVariantList &ids)
+{
+    if (ids.isEmpty()) return;
+    std::vector<MLItemId> mlItemIdVector;
+    mlItemIdVector.reserve(ids.size());
+
+    if (ids.at(0).canConvert<MLItemId>())
+    {
+        for (const QVariant& id : ids)
+        {
+            // Do not mix types. This is currently not possible
+            // in the application anyway.
+            assert(id.canConvert<MLItemId>());
+
+            mlItemIdVector.push_back(id.value<MLItemId>());
+        }
+
+        appendMediaIntoPlaylist(ml, playlistId, mlItemIdVector);
+    }
+    else
+    {
+        QVector<vlc::playlist::Media> medias = vlc::playlist::toMediaList(ids);
+
+        for (const auto& media : medias)
+        {
+            assert(media.raw());
+
+            const char * const uri = media.raw()->psz_uri;
+
+            vlc_ml_media_t * ml_media = vlc_ml_get_media_by_mrl(ml, uri);
+
+            if (ml_media == nullptr)
+            {
+                ml_media = vlc_ml_new_external_media(ml, uri);
+                if (ml_media == nullptr)
+                    continue;
+            }
+
+            vlc_ml_playlist_append(ml, playlistId, &ml_media->i_id, 1);
+            vlc_ml_media_release(ml_media);
+        }
+    }
+}
+
 } //anonymous namespace
 
 //=================================================================================================
@@ -86,32 +130,40 @@ void appendMediaIntoPlaylist(vlc_medialibrary_t* ml, int64_t playlistId, const s
 
 /* Q_INVOKABLE */ void MLPlaylistListModel::create(const QString & name, const QVariantList& initialItems)
 {
-    assert(m_mediaLib);
+    if (!m_mediaLib || name.trimmed().isEmpty())
+    {
+        emit creationFailed(tr("Enter a playlist name and enable the media library."));
+        return;
+    }
 
     struct Ctx {
         MLItemId createdPlaylistId;
     };
 
-    setTransactionPending(true);
+    if (!setTransactionPending(true))
+        return;
 
     m_mediaLib->runOnMLThread<Ctx>(this,
     //ML thread
-    [name](vlc_medialibrary_t* ml, Ctx& ctx)
+    [name, initialItems](vlc_medialibrary_t* ml, Ctx& ctx)
     {
         vlc_ml_playlist_t * playlist = vlc_ml_playlist_create(ml, qtu(name));
         if (playlist)
         {
-            ctx.createdPlaylistId = MLItemId(playlist->i_id, VLC_ML_PARENT_UNKNOWN);
+            ctx.createdPlaylistId = MLItemId(playlist->i_id, VLC_ML_PARENT_PLAYLIST);
             vlc_ml_playlist_release(playlist);
+            appendPlaylistItems(ml, ctx.createdPlaylistId.id, initialItems);
         }
     },
-    [this, initialItems](quint64, const Ctx& ctx) {
-        endTransaction(); // this is intentionally called here and not after `append()`
+    [this](quint64, const Ctx& ctx) {
+        endTransaction();
 
         if (ctx.createdPlaylistId.id)
         {
-            append(ctx.createdPlaylistId, initialItems);
+            emit created(ctx.createdPlaylistId);
         }
+        else
+            emit creationFailed(tr("The playlist could not be created."));
     });
 }
 
@@ -127,45 +179,7 @@ void appendMediaIntoPlaylist(vlc_medialibrary_t* ml, int64_t playlistId, const s
     m_mediaLib->runOnMLThread(this,
     //ML thread
     [playlistId, ids](vlc_medialibrary_t* ml) {
-        std::vector<MLItemId> mlItemIdVector;
-        mlItemIdVector.reserve(ids.size());
-
-        if (ids.at(0).canConvert<MLItemId>())
-        {
-            for (const QVariant& id : ids)
-            {
-                // Do not mix types. This is currently not possible
-                // in the application anyway.
-                assert(id.canConvert<MLItemId>());
-
-                mlItemIdVector.push_back(id.value<MLItemId>());
-            }
-
-            appendMediaIntoPlaylist(ml, playlistId.id, mlItemIdVector);
-        }
-        else
-        {
-            QVector<vlc::playlist::Media> medias = vlc::playlist::toMediaList(ids);
-
-            for (const auto& media : medias)
-            {
-                assert(media.raw());
-
-                const char * const uri = media.raw()->psz_uri;
-
-                vlc_ml_media_t * ml_media = vlc_ml_get_media_by_mrl(ml, uri);
-
-                if (ml_media == nullptr)
-                {
-                    ml_media = vlc_ml_new_external_media(ml, uri);
-                    if (ml_media == nullptr)
-                        continue;
-                }
-
-                vlc_ml_playlist_append(ml, playlistId.id, &ml_media->i_id, 1);
-                vlc_ml_media_release(ml_media);
-            }
-        }
+        appendPlaylistItems(ml, playlistId.id, ids);
     },
     //UI thread
     [this]() {

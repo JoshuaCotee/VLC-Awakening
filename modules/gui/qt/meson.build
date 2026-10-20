@@ -644,9 +644,13 @@ qml_modules += {
     ),
     'sources': files(
         'maininterface/qml/AwakeningAction.qml',
+        'maininterface/qml/AwakeningHome.qml',
+        'maininterface/qml/AwakeningLibrary.qml',
+        'maininterface/qml/AwakeningLibraryButton.qml',
         'maininterface/qml/AwakeningOnboarding.qml',
         'maininterface/qml/AwakeningShortcuts.qml',
         'maininterface/qml/AwakeningNetwork.qml',
+        'maininterface/qml/AwakeningNewPlaylist.qml',
         'maininterface/qml/AwakeningMenu.qml',
         'maininterface/qml/AwakeningDialog.qml',
         'maininterface/qml/AwakeningField.qml',

@@ -329,7 +329,7 @@ Item {
                 default:
                     console.error("unexpected interface mode", MainCtx.effectiveMainInterfaceMode)
                 case MainCtx.MAININTERFACE_MODE_MAINDISPLAY:
-                    return "qrc:///qt/qml/VLC/MainInterface/MainDisplay.qml"
+                    return "qrc:///qt/qml/VLC/MainInterface/AwakeningHome.qml"
                 }
             }
         }
@@ -341,12 +341,13 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: ["settings", "shortcuts", "network", "onboarding"].includes(AwakeningUi.dialog)
+            active: ["settings", "shortcuts", "network", "onboarding", "newPlaylist"].includes(AwakeningUi.dialog)
             source: "qrc:/qt/qml/VLC/MainInterface/" + ({
                 settings: "AwakeningSettings.qml",
                 shortcuts: "AwakeningShortcuts.qml",
                 onboarding: "AwakeningOnboarding.qml",
-                network: "AwakeningNetwork.qml"
+                network: "AwakeningNetwork.qml",
+                newPlaylist: "AwakeningNewPlaylist.qml"
             }[AwakeningUi.dialog] || "AwakeningSettings.qml")
         }
 

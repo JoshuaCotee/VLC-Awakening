@@ -10,18 +10,32 @@ AwakeningDialog {
     title: qsTr("Open Network Stream")
     dialogName: "network"
     property string error: ""
+    property var pendingLinks: []
     function save() {
         const links = urls.text.split(/[\r\n]+/).map(line => line.trim()).filter(line => !!line)
         if (!links.length || links.some(link => !/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(link))) {
             error = qsTr("Enter a complete stream URL on each line.")
             return
         }
-        if (playlistName.text.trim() && MainCtx.mediaLibraryAvailable)
+        if (playlistName.text.trim() && MainCtx.mediaLibraryAvailable) {
+            pendingLinks = links
+            busy = true
             playlists.create(playlistName.text.trim(), links)
-        MainPlaylistController.append(links, true)
-        close()
+        } else {
+            MainPlaylistController.append(links, true)
+            close()
+        }
     }
-    MLPlaylistListModel { id: playlists; ml: MainCtx.mediaLibrary }
+    MLPlaylistListModel {
+        id: playlists
+        ml: MainCtx.mediaLibrary
+        onCreated: {
+            root.busy = false
+            MainPlaylistController.append(root.pendingLinks, true)
+            root.close()
+        }
+        onCreationFailed: message => { root.busy = false; root.error = message }
+    }
     Flickable {
         anchors.fill: parent
         contentHeight: 509 * root.unit
@@ -70,13 +84,14 @@ AwakeningDialog {
         }
     }
     footer: [
-        AwakeningAction { x: 20 * root.unit; y: 20 * root.unit; text: qsTr("Cancel"); onClicked: root.close() },
+        AwakeningAction { x: 20 * root.unit; y: 20 * root.unit; text: qsTr("Cancel"); enabled: !root.busy; onClicked: root.close() },
         AwakeningAction {
             anchors.right: parent.right
             anchors.rightMargin: 20 * root.unit
             y: 20 * root.unit
             text: qsTr("Save")
             accent: true
+            enabled: !root.busy
             onClicked: root.save()
         }
     ]

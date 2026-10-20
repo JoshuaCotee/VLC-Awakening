@@ -147,35 +147,15 @@ FocusScope {
         }
     }
 
-    PlayerPlaylistVisibilityFSM {
-        id: playlistVisibility
-
-        onIsPlaylistVisibleChanged: lockUnlockAutoHide(isPlaylistVisible)
-    }
-
     Connections {
         target: MainCtx
 
         //playlist
         function onHasEmbededVideoChanged() {
-            playlistVisibility.updateVideoEmbed()
             playerToolbarVisibilityFSM.updateVideoEmbed()
         }
         function onAskShow() {
             playerToolbarVisibilityFSM.askShow()
-        }
-    }
-
-
-    Connections {
-        target: MainCtx.playqueuePanel
-
-        //playlist
-        function onDockedChanged() {
-            playlistVisibility.updatePlaylistDocked()
-        }
-        function onVisibleChanged() {
-            playlistVisibility.updatePlaylistVisible()
         }
     }
 
@@ -188,7 +168,7 @@ FocusScope {
         anchors {
             left: parent.left
             right: parent.right
-            leftMargin: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
+            leftMargin: (playlistpopup.visible ? playlistpopup.width : 0) + (rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0)
             rightMargin: rootPlayer._controlsUnderVideo ? 10 * VLCStyle.scale : 0
             top: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? topBar.bottom : parent.top
             bottom: (MainCtx.hasEmbededVideo && rootPlayer._controlsUnderVideo) ? controlBar.top : parent.bottom
@@ -974,7 +954,7 @@ FocusScope {
         topMargin: VLCStyle.applicationVerticalMargin
         sideMargin: VLCStyle.applicationHorizontalMargin
 
-        textWidth: playlistVisibility.isPlaylistVisible
+        textWidth: playlistpopup.visible
                  ? rootPlayer.width - playlistpopup.width
                  : rootPlayer.width
 
@@ -993,7 +973,7 @@ FocusScope {
 
         showCSD: MainCtx.clientSideDecoration && (MainCtx.intfMainWindow.visibility !== Window.FullScreen)
         showToolbar: MainCtx.hasToolbarMenu && (MainCtx.intfMainWindow.visibility !== Window.FullScreen)
-        playlistVisible: playlistVisibility.isPlaylistVisible
+        playlistVisible: playlistpopup.visible
 
         plListView: {
             if (playlistpopup.active)
@@ -1006,7 +986,7 @@ FocusScope {
 
         Navigation.parentItem: rootPlayer
         Navigation.downItem: {
-            if (playlistVisibility.isPlaylistVisible)
+            if (playlistpopup.visible)
                 return playlistpopup
             if (MainCtx.hasEmbededVideo)
                 return playerSpecializationLoader
@@ -1022,18 +1002,13 @@ FocusScope {
                     || playerToolbarVisibilityFSM.isVisible) ? "visible" : "hidden"
         }
 
-        onTogglePlaylistVisibility: playlistVisibility.togglePlaylistVisibility()
+        onTogglePlaylistVisibility: AwakeningUi.sidebarVisible = !AwakeningUi.sidebarVisible
 
         onRequestLockUnlockAutoHide: (lock) => {
             rootPlayer.lockUnlockAutoHide(lock)
         }
 
-        onBackRequested: {
-            if (MainCtx.hasEmbededVideo && !MainCtx.canShowVideoPIP) {
-               MainPlaylistController.stop()
-            }
-            MainCtx.playerView = false
-        }
+        onBackRequested: AwakeningUi.openLibrary("videos")
 
         FadeControllerStateGroup {
             target: topBar
@@ -1065,158 +1040,14 @@ FocusScope {
 
     Loader {
         id: playlistpopup
-
-        anchors {
-            // NOTE: When the controls are pinned we display the playqueue under the topBar.
-            top: (rootPlayer._controlsUnderVideo) ? topBar.bottom
-                                                  : parent.top
-
-            right: parent.right
-            bottom: parent.bottom
-
-            bottomMargin: parent.height - rootPlayer.positionSliderY
-        }
-
-        focus: false
-
-        active: MainCtx.playqueuePanel.docked
-
-        //initial state value is "", using a binding avoid animation on startup
-        Binding on state {
-            when: playlistVisibility.started
-            value: (status === Loader.Ready && playlistVisibility.isPlaylistVisible) ? "expanded" : "retracted"
-        }
-
-        Component.onCompleted: {
-            Qt.callLater(() => { playlistTransition.enabled = true; })
-        }
-
-        states: [
-            State {
-                name: "expanded"
-                PropertyChanges {
-                    target: playlistpopup
-                    width: playlistpopup.implicitWidth
-                    visible: true
-                }
-           }, State {
-                name: "retracted"
-                PropertyChanges {
-                    target: playlistpopup
-                    width: 0
-                    visible: false
-                }
-           }
-        ]
-
-        transitions: Transition {
-            id: playlistTransition
-            enabled: false
-
-            from: "retracted"; to: "expanded";
-            reversible: true
-
-            SequentialAnimation {
-                PropertyAction { property: "visible" }
-
-                NumberAnimation {
-                    property: "width"
-                    duration: VLCStyle.duration_short
-                    easing.type: Easing.InOutSine
-                }
-            }
-        }
-
-        sourceComponent: PlaylistPane {
-            id: playlistView
-
-            property real maximumWidth: (rootPlayer.width + playlistView.rightPadding) / 2
-
-            implicitWidth: Helpers.clamp(MainCtx.playqueuePanel.width
-                                 , playlistView.minimumWidth
-                                 , playlistView.maximumWidth)
-            height: playlistpopup.height
-
-            useAcrylic: false
-            focus: true
-
-            wheelEnabled: true
-
-            rightPadding: VLCStyle.applicationHorizontalMargin
-            topPadding:  {
-                if (rootPlayer._controlsUnderVideo)
-                    return VLCStyle.margin_normal
-                else
-                    // NOTE: We increase the padding accordingly to avoid overlapping the TopBar.
-                    return topBar.reservedHeight
-            }
-            bottomPadding: 0
-
-            background: Rectangle {
-                color: windowTheme.bg.primary.alpha(0.8)
-            }
-
-            view.fadingEdge.pixelAlignedForDPR: !controlBar.visible
-
-            Navigation.parentItem: rootPlayer
-            Navigation.upItem: topBar
-            Navigation.downItem: Player.isInteractive ? toggleControlBarButton : controlBar
-            Navigation.leftAction: closePlaylist
-            Navigation.cancelAction: closePlaylist
-
-            function closePlaylist() {
-                playlistVisibility.togglePlaylistVisibility()
-                if (audioControls.visible)
-                    audioControls.forceActiveFocus()
-                else
-                    controlBar.forceActiveFocus()
-            }
-
-
-            Widgets.HorizontalResizeHandle {
-                id: resizeHandle
-
-                property bool _inhibitMainCtxUpdate: false
-
-                parent: playlistView
-
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
-                }
-
-                atRight: false
-                currentWidth: playlistpopup.width
-
-                maximumWidth: playlistView.maximumWidth
-                minimumWidth: playlistView.minimumWidth
-
-                onRequestedWidthChanged: {
-                    if (!_inhibitMainCtxUpdate)
-                        MainCtx.playqueuePanel.width = requestedWidth
-                }
-
-                Component.onCompleted:  _updateFromMainCtx()
-
-                function _updateFromMainCtx() {
-                    if (requestedWidth === MainCtx.playqueuePanel.width)
-                        return
-
-                    _inhibitMainCtxUpdate = true
-                    requestedWidth = MainCtx.playqueuePanel.width
-                    _inhibitMainCtxUpdate = false
-                }
-
-                Connections {
-                    target: MainCtx.playqueuePanel
-
-                    function onWidthChanged() {
-                        resizeHandle._updateFromMainCtx()
-                    }
-                }
-            }
-        }
+        anchors.left: parent.left
+        anchors.top: topBar.bottom
+        anchors.bottom: controlBar.top
+        width: Math.min(427 * VLCStyle.scale, rootPlayer.width * 0.48)
+        visible: AwakeningUi.sidebarVisible && MainCtx.intfMainWindow.visibility !== Window.FullScreen
+        active: visible
+        sourceComponent: AwakeningLibrary { }
+        onVisibleChanged: rootPlayer.lockUnlockAutoHide(visible)
     }
 
     Dialogs {
@@ -1294,7 +1125,7 @@ FocusScope {
         iconTxt: controlBar.state === "hidden" ? VLCIcons.expand_inverted : VLCIcons.expand
 
         Navigation.parentItem: rootPlayer
-        Navigation.upItem: playlistVisibility.isPlaylistVisible ? playlistpopup : (MainCtx.hasEmbededVideo ? playerSpecializationLoader : topBar)
+        Navigation.upItem: playlistpopup.visible ? playlistpopup : (MainCtx.hasEmbededVideo ? playerSpecializationLoader : topBar)
         Navigation.downItem: controlBar
 
         onClicked:{
@@ -1328,7 +1159,7 @@ FocusScope {
 
         Navigation.parentItem: rootPlayer
         Navigation.upItem: {
-            if (playlistVisibility.isPlaylistVisible)
+            if (playlistpopup.visible)
                 return playlistpopup
             if (Player.isInteractive)
                 return toggleControlBarButton
@@ -1345,7 +1176,10 @@ FocusScope {
 
         onRequestLockUnlockAutoHide: (lock) => rootPlayer.lockUnlockAutoHide(lock)
 
-        onTogglePlaylistVisibility: playlistVisibility.togglePlaylistVisibility()
+        onTogglePlaylistVisibility: {
+            AwakeningUi.librarySection = "queue"
+            AwakeningUi.sidebarVisible = !AwakeningUi.sidebarVisible
+        }
         onHoveredChanged: rootPlayer.lockUnlockAutoHide(hovered)
 
         FadeControllerStateGroup {

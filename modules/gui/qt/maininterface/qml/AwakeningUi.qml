@@ -11,4 +11,8 @@ QtObject {
         settingsCategory = category || "general"
         dialog = "settings"
     }
+    function openLibrary(section) {
+        librarySection = section
+        sidebarVisible = true
+    }
 }

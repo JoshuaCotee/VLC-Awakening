@@ -15,6 +15,8 @@ T.Popup {
     property alias footer: footerItem.data
     property real headerHeight: 50
     property real footerHeight: 72
+    property bool busy: false
+    property color dialogColor: AwakeningTheme.panel
     width: Math.min(designWidth * unit, parent.width - 32 * unit)
     height: Math.min(designHeight * unit, parent.height - 32 * unit)
     x: (parent.width - width) / 2
@@ -23,13 +25,13 @@ T.Popup {
     modal: true
     focus: true
     visible: AwakeningUi.dialog === dialogName
-    closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
+    closePolicy: busy ? T.Popup.NoAutoClose : T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutside
     onOpened: MainCtx.preferHotkeys = false
     onClosed: {
         MainCtx.preferHotkeys = MainCtx.playerView
         if (AwakeningUi.dialog === dialogName) AwakeningUi.dialog = ""
     }
-    background: Rectangle { color: AwakeningTheme.panel; radius: 14 * root.unit }
+    background: Rectangle { color: root.dialogColor; radius: 14 * root.unit }
     contentItem: Item {
         Rectangle {
             width: parent.width
@@ -55,6 +57,7 @@ T.Popup {
                 height: width
                 padding: 4 * root.unit
                 Accessible.name: qsTr("Close")
+                enabled: !root.busy
                 onClicked: root.close()
                 contentItem: Image { source: "qrc:/awakening/design/close.svg" }
                 background: Rectangle { radius: 4 * root.unit; color: parent.hovered ? AwakeningTheme.surface : "transparent" }
